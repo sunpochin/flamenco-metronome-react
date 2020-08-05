@@ -1,11 +1,11 @@
 import $ from 'jquery';
 import {serverapi, postCompas, getCompas} from './serverapi.js';
+import {MetronomeCore, VisSettings} from './MetronomeCore.js';
 
 // import axios from 'axios';
 // import MetronomeWorker from './MetronomeWorker.js';
 // import {postCompas, getCompas} from './server-api.js';
 // const SpeedType = 'subida';
-const MetronomeCore = require('./MetronomeCore.js');
 
 let self = null;
 let arrayPalo = ["Alegrias", "Tangos", "Soleares", "Bulerias"];
@@ -64,19 +64,17 @@ class MetronomeEditor {
             setStartTime: (t) => visSettings.startTime = t
         };
         self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
+        console.log('soundsPath: ', soundsPath);
 
         self.createButtons();
         self.loadJson();
 
-
-        if (null == visSettings) {
-            return;
-        }
-        var btnplaymetronome = document.getElementById('playmetronome');
-        btnplaymetronome.addEventListener("click", function() {
-            self.startStop();
-        });
         visSettings.getTime = () => self.metroWorker.audioContext.currentTime;
+
+        // var btnplaymetronome = document.getElementById('playmetronome');
+        // btnplaymetronome.addEventListener("click", function() {
+        //     self.startStop();
+        // });
         
     }
 

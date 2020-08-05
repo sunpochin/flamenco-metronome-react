@@ -1,4 +1,5 @@
 
+import sound from "./Clap_bright.wav"
 let endtime = new Date().getTime();
 // let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
 //     1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0 ];
@@ -10,6 +11,15 @@ let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
 let beatTangos = [0, 1.0, 0.5, 0.5, 1.0, 1.0];
 
 let self = null;
+
+const VisSettings = {
+    tempoBpm: 0,
+    startTime: 0,
+    getTime: undefined,
+    visualizationType: 1,
+    names: ['Spinning Circle', 'Circle']
+};
+
 
 //export default class MetronomeCore {
 class MetronomeCore {
@@ -52,10 +62,10 @@ class MetronomeCore {
     }
 
     updateCompasIndicator() {
-        let compasTable = document.getElementById('compas-table');
-        console.log('updateCompasIndicator: ', this.compasNo, ', compasTable: ', compasTable);
-        let cell = compasTable.rows[self.compasNo + 1].cells[0];
-        cell.innerHTML = "==>";
+        // let compasTable = document.getElementById('compas-table');
+        // console.log('updateCompasIndicator: ', this.compasNo, ', compasTable: ', compasTable);
+        // let cell = compasTable.rows[self.compasNo + 1].cells[0];
+        // cell.innerHTML = "==>";
     }
 
 
@@ -150,6 +160,10 @@ class MetronomeCore {
 
 class AudioFiles {
     constructor(context, urlList) {
+        // console.log('context: ', context);
+        // console.log('urlList: ', urlList);
+        console.log('sound: ', sound);
+
         const self = this;
         self.buffers = [];
 
@@ -159,7 +173,9 @@ class AudioFiles {
             xhr.onload = () => context.decodeAudioData(xhr.response,
                 (buffer) => self.buffers[index] = buffer,
                 (error) => console.error('decode Audio Data error', error));
-            xhr.open("GET", url);
+
+//            xhr.open("GET", url);
+            xhr.open("GET", sound);
             xhr.send();
         });
     }
@@ -187,5 +203,4 @@ class AudioFiles {
 
 //exports MetronomeCore;
 //module export MetronomeCore;
-
-module.exports = MetronomeCore;
+export {MetronomeCore, VisSettings};

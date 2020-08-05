@@ -7,7 +7,7 @@ const serverapi = axios.create({
 const postCompas = datas => serverapi.put('compas.json', datas)
     .then(res => {
         console.log('axios res.data: ', res);
-        if (200 == res.status) {
+        if (200 === res.status) {
             const wording = 'Successfully save a compas table of ' 
                 + datas.length + ' compases to server.';
             alert(wording);
@@ -19,7 +19,7 @@ const postCompas = datas => serverapi.put('compas.json', datas)
 const getCompas = () => serverapi.get('compas.json' )
     .then(res => {
         console.log('axios res.data: ', res);
-        if (200 == res.status) {
+        if (200 === res.status) {
             const wording = 'Got a compas table of ' + res;
             return res;
         }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {serverapi, postCompas, getCompas} from './serverapi.js';
 import MetronomeEditor from './MetronomeEditor.js';
+import {MetronomeCore, VisSettings} from './MetronomeCore.js';
 
 // import Aux from '../../hoc/Aux/Aux';
 // import Modal from '../../components/UI/Modal/Modal';
@@ -16,10 +17,27 @@ const INGREDIENT_PRICES = {
 };
 
 class Editor extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {...}
-    // }
+    constructor(props) {
+        super(props);
+//        this.state = {...};
+//        self = this;
+        this.theEditor = new MetronomeEditor('./res/audio/',
+        [ 'Low_Bongo.wav', 'Clap_bright.wav',],
+            VisSettings);
+        this.theEditor.setAudioContext(new (window.AudioContext || window.webkitAudioContext)() );
+
+        this.state = {isToggleOn: true};
+
+        // 為了讓 `this` 能在 callback 中被使用，這裡的綁定是必要的：
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        this.setState(state => ({
+            isToggleOn: !state.isToggleOn
+        }));
+        this.theEditor.startStop();
+    }
     state = {
         ingredients: null,
         totalPrice: 4,
@@ -106,9 +124,6 @@ class Editor extends Component {
     // }
 
     render () {
-        const theEditor = new MetronomeEditor('res/audio/',
-        [ 'Low_Bongo.wav', 'Clap_bright.wav',],
-            null);
 
         // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
 
@@ -146,7 +161,9 @@ class Editor extends Component {
         // {salad: true, meat: false, ...}
         return (
             <div>
-                <button id="play">Play</button>
+                <button id="play" onClick={this.handleClick}>
+                {this.state.isToggleOn ? 'Play' : 'Stop'}
+                </button>
                 <h1>We hope it tastes well!</h1>
                 <p>editor</p>
             </div>
