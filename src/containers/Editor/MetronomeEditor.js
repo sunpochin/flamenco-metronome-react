@@ -1,6 +1,6 @@
 import $ from 'jquery';
-import {serverapi, postCompas, getCompas} from './serverapi.js';
-import {MetronomeCore, VisSettings} from './MetronomeCore.js';
+import { postCompas, getCompas } from './serverapi.js';
+import { MetronomeCore, VisSettings } from './MetronomeCore.js';
 
 // import axios from 'axios';
 // import MetronomeWorker from './MetronomeWorker.js';
@@ -14,7 +14,7 @@ let arraySpeedType = ["Constant", "Inc. by Beat", "Inc. by Compas", "Dec. by Bea
 
 function download(content, fileName, contentType) {
     var a = document.createElement("a");
-    var file = new Blob([content], {type: contentType});
+    var file = new Blob([content], { type: contentType });
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
@@ -23,7 +23,7 @@ function download(content, fileName, contentType) {
 function inputClickHandler(e) {
     e = e || window.event;
     var tdElm = e.target || e.srcElement;
-    if(tdElm.style.backgroundColor == 'rgb(255, 0, 0)'){
+    if (tdElm.style.backgroundColor == 'rgb(255, 0, 0)') {
         tdElm.style.backgroundColor = '#fff';
     } else {
         tdElm.style.backgroundColor = '#f00';
@@ -41,22 +41,22 @@ class MetronomeEditor {
      * @param visTypeSelectId the ID of the HTML select control for the visualization types
      * @param startStopId the ID of the HTML button to start and stop the metronome
      */
-    constructor(soundsPath, sounds, visSettings, soundSelectId, 
+    constructor(soundsPath, sounds, visSettings, soundSelectId,
         visTypeSelectId, startStopId) {
         // console.log('constructor: ' );
         self = this;
         // mimicing private variables: https://stackoverflow.com/a/28165599/720276
         let _datas = [];
-        self.setDatas = function(datas) { _datas = datas; }
-        self.getDatas = function() { return _datas; }
-        self.getDataByIdx = function(idx) { return _datas[idx]; }
-        self.insertDatas = function(idx, aCompas) { 
-            _datas.splice(idx, 0, aCompas); 
+        self.setDatas = function (datas) { _datas = datas; }
+        self.getDatas = function () { return _datas; }
+        self.getDataByIdx = function (idx) { return _datas[idx]; }
+        self.insertDatas = function (idx, aCompas) {
+            _datas.splice(idx, 0, aCompas);
         }
 
         self.visSettings = visSettings;
         self.soundSelectId = soundSelectId || 'soundSelect';
-//        console.log('this.soundSelectId: ', this.soundSelectId);
+        //        console.log('this.soundSelectId: ', this.soundSelectId);
         self.visTypeSelectId = visTypeSelectId || 'visType';
         self.startStopId = startStopId || 'metronome';
         const metroSoundListener = {
@@ -75,7 +75,7 @@ class MetronomeEditor {
         // btnplaymetronome.addEventListener("click", function() {
         //     self.startStop();
         // });
-        
+
     }
 
     // start of stop the beating.
@@ -86,9 +86,9 @@ class MetronomeEditor {
 
     createButtons() {
         let mainCon, iBtn, iDiv;
-//        mainCon = document.getElementById('main-container');
+        //        mainCon = document.getElementById('main-container');
         mainCon = document.getElementById('div1');
-//        mainCon = document.body;
+        //        mainCon = document.body;
 
         // iDiv = document.createElement('div');
         // iDiv.className = 'col-md-4'; 
@@ -104,19 +104,19 @@ class MetronomeEditor {
         // iBtn.textContent = 'Save';
         // iBtn.id = 'btn-save';
         // mainCon.appendChild(iBtn);
-//        mainCon.appendChild(iDiv);
+        //        mainCon.appendChild(iDiv);
 
         iBtn = document.getElementById('btn-load');
         if (null == iBtn) {
             console.log('iBtn null');
             return;
         }
-        iBtn.addEventListener("click", function() {
+        iBtn.addEventListener("click", function () {
             self.loadJson();
         });
 
         iBtn = document.getElementById('btn-save');
-        iBtn.addEventListener("click", function() {
+        iBtn.addEventListener("click", function () {
             self.saveJson();
         });
 
@@ -134,7 +134,7 @@ class MetronomeEditor {
         Palo.append(`<option>OnBeat</option>`);
 
         console.log('cnt: ', this.getDatas().length)
-        for (let element of this.getDatas() ) {
+        for (let element of this.getDatas()) {
             const soundSelect = $('#' + this.soundSelectId + element["no"]);
             console.log('soundSelect: ', soundSelect);
             // for (const name of sounds) {
@@ -150,43 +150,43 @@ class MetronomeEditor {
     async localJson() {
         const getJson = async () => {
             return fetch("res/compas-table.json")
-            .then(response => response.json())
-            .then(json => {
-                console.log('local json');
+                .then(response => response.json())
+                .then(json => {
+                    console.log('local json');
 
-                self.setDatas(json);
-                self.metroWorker.setCompasTable(json);
-//                self.tableCreate();
-                console.log('json: ', json)
-                // console.log('this.datas: ', this.datas)
+                    self.setDatas(json);
+                    self.metroWorker.setCompasTable(json);
+                    //                self.tableCreate();
+                    console.log('json: ', json)
+                    // console.log('this.datas: ', this.datas)
 
-                // self.addHeader();
-                // self.CreateRow(self.getDatas() );
-            });
+                    // self.addHeader();
+                    // self.CreateRow(self.getDatas() );
+                });
         }
         await getJson();
         this.SetupSelection();
     }
 
     loadJson() {
-        getCompas()
+        return getCompas()
             .then(response => response)
             .then(response => {
-                console.log('from server: ', (response.data), 
-                    ', json.length: ', response.data.length );
+                console.log('from server: ', (response.data),
+                    ', json.length: ', response.data.length);
 
                 if (response.data.length > 0) {
                     // let json = JSON.stringify(res.data);
                     // console.log('from server, ', json);
-        
+
                     self.setDatas(response.data);
                     self.metroWorker.setCompasTable(response.data);
-//                    self.tableCreate();
-                    return;
+                    //                    self.tableCreate();
                 } else {
                     // go on load from local.
                     self.localJson();
                 }
+                return response.data;
             });
     }
 
@@ -215,7 +215,7 @@ class MetronomeEditor {
         row.appendChild(th);
         for (let key of data) {
             let th = document.createElement("th");
-            let text = document.createTextNode(key );
+            let text = document.createTextNode(key);
             th.appendChild(text);
             row.appendChild(th);
         }
@@ -229,13 +229,13 @@ class MetronomeEditor {
         iBtn.setAttribute("id", colID);
         iBtn.className = "btn-info";
         iBtn.textContent = "+ compas"
-        iBtn.addEventListener("click", function() {
+        iBtn.addEventListener("click", function () {
             self.addCompas(this);
         });
         let cell = row.insertCell();
         cell.appendChild(iBtn);
     }
-    
+
     generateTable(table, data) {
         if (null == table) {
             return;
@@ -254,7 +254,7 @@ class MetronomeEditor {
             item.setAttribute("id", colID);
             item.className = "btn btn-lg btn-primary disabled";
             item.textContent = colID;
-            item.addEventListener("change", function() {
+            item.addEventListener("change", function () {
                 self.setSound(this.selectedIndex + 1);
             });
             cell.appendChild(item);
@@ -264,7 +264,7 @@ class MetronomeEditor {
             colID = "Palo_" + element["no"];
             iSelect.setAttribute("id", colID);
             iSelect.setAttribute("class", "form-control-sm");
-            iSelect.addEventListener("change", function() {
+            iSelect.addEventListener("change", function () {
                 self.setSound(this.selectedIndex + 1);
             });
             for (var i = 0; i < arrayPalo.length; i++) {
@@ -284,7 +284,7 @@ class MetronomeEditor {
             iInput.setAttribute("type", "text");
             iInput.width = 1000;
             iInput.height = 1000;
-//            iInput.setAttribute("class", "form-control");
+            //            iInput.setAttribute("class", "form-control");
             cell = row.insertCell();
             cell.appendChild(iInput);
 
@@ -293,10 +293,10 @@ class MetronomeEditor {
             colID = "soundSelect_" + element["no"];
             iSelect.setAttribute("id", colID);
             iSelect.setAttribute("class", "form-control-sm");
-            iSelect.addEventListener("change", function() {
+            iSelect.addEventListener("change", function () {
                 self.setSound(this.selectedIndex + 1);
             });
-            for (var i = 0; i < arrayPalo.length; i++) {
+            for (i = 0; i < arrayPalo.length; i++) {
                 option = document.createElement("option");
                 option.value = arraySpeedType[i];
                 option.text = arraySpeedType[i];
@@ -310,19 +310,19 @@ class MetronomeEditor {
             iBtn.setAttribute("id", colID);
             iBtn.className = "btn-info";
             iBtn.textContent = "+ compas"
-            iBtn.addEventListener("click", function() {
+            iBtn.addEventListener("click", function () {
                 self.addCompas(this);
             });
             cell = row.insertCell();
             cell.appendChild(iBtn);
         }
     }
-    
+
     tableCreate() {
         // https://stackoverflow.com/questions/7271490/delete-all-rows-in-an-html-table
         let table = document.getElementById("compas-table");
         // delete rows.
-        while(table.rows.length > 0) {
+        while (table.rows.length > 0) {
             table.deleteRow(0);
         }
         table.deleteTHead();
@@ -331,17 +331,17 @@ class MetronomeEditor {
         let header = Object.keys(firstdata);
         console.log(' firstdata: ', firstdata);
         console.log(' header: ', header);
-            // console.log('document: ', document, ', table: ', table, 
-            // ', firstdata: ', firstdata, ', header: ', header )
+        // console.log('document: ', document, ', table: ', table, 
+        // ', firstdata: ', firstdata, ', header: ', header )
 
         self.generateTableHead(table, header);
-        self.generateTable(table, self.getDatas() );
+        self.generateTable(table, self.getDatas());
 
 
         var all = document.getElementsByTagName("td");
-        for (var i=0;i<all.length;i++) {
-            all[i].onclick = inputClickHandler;       
-        }        
+        for (var i = 0; i < all.length; i++) {
+            all[i].onclick = inputClickHandler;
+        }
     }
 
 
@@ -362,10 +362,10 @@ class MetronomeEditor {
         iBtn.setAttribute("id", rowID);
         iBtn.className = "btn-info";
         iBtn.textContent = "+ compas"
-        iBtn.addEventListener("click", function() {
+        iBtn.addEventListener("click", function () {
             self.addCompas(this);
         });
-//            iBtn.setAttribute("class", "form-control");
+        //            iBtn.setAttribute("class", "form-control");
         return iBtn;
     }
 
@@ -389,25 +389,25 @@ class MetronomeEditor {
         console.log('addCompas element: ', element);
         const toStr = (element.id).toString();
 
-        const compasIdx = parseInt(toStr.replace('add_', '') );
-        console.log('addCompas, compasNo: ', element.id, 
+        const compasIdx = parseInt(toStr.replace('add_', ''));
+        console.log('addCompas, compasNo: ', element.id,
             ', toStr: ', toStr, ', compasIdx: ', compasIdx);
         let aJson = {
             'no': '0',
             'Palo': 'Alegrias',
-            'Speed': 300, 
+            'Speed': 300,
             'SType': 'Constant'
         };
-        aJson['no'] = compasIdx.toString() ;
-    
+        aJson['no'] = compasIdx.toString();
+
         self.insertDatas(compasIdx, aJson);
-        for (let idx = compasIdx + 1; idx < self.getDatas().length; idx++ ) {
-            console.log('idx: ', idx, ', self.getDataByIdx(idx): ', 
-                self.getDataByIdx(idx) );
+        for (let idx = compasIdx + 1; idx < self.getDatas().length; idx++) {
+            console.log('idx: ', idx, ', self.getDataByIdx(idx): ',
+                self.getDataByIdx(idx));
             let oldNo = parseInt(self.getDataByIdx(idx)['no'], 10);
             self.getDataByIdx(idx)['no'] = oldNo + 1;
         }
-//        self.tableCreate();
+        //        self.tableCreate();
     }
 
     /**

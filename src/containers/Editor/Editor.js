@@ -1,180 +1,148 @@
+import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
-import {serverapi, postCompas, getCompas} from './serverapi.js';
+import { serverapi } from './serverapi.js';
 import MetronomeEditor from './MetronomeEditor.js';
-import {MetronomeCore, VisSettings} from './MetronomeCore.js';
-
-// import Aux from '../../hoc/Aux/Aux';
-// import Modal from '../../components/UI/Modal/Modal';
-// import Spinner from '../../components/UI/Spinner/Spinner';
-//import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-//import axios from '../../axios-orders';
-
-const INGREDIENT_PRICES = {
-    salad: 0.5,
-    cheese: 0.4,
-    meat: 1.3,
-    bacon: 0.7
-};
+import { VisSettings } from './MetronomeCore.js';
 
 class Editor extends Component {
-    constructor(props) {
-        super(props);
-//        this.state = {...};
-//        self = this;
-        this.theEditor = new MetronomeEditor('./res/audio/',
-        [ 'Low_Bongo.wav', 'Clap_bright.wav',],
-            VisSettings);
-        this.theEditor.setAudioContext(new (window.AudioContext || window.webkitAudioContext)() );
+  constructor(props) {
+    super(props);
+    //        this.state = {...};
+    //        self = this;
+    this.state = { compasArray: [] };
+    this.theEditor = new MetronomeEditor('./res/audio/',
+      ['Low_Bongo.wav', 'Clap_bright.wav',],
+      VisSettings);
+    this.theEditor.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
 
-        this.state = {isToggleOn: true};
+    this.state = { isToggleOn: true };
 
-        // 為了讓 `this` 能在 callback 中被使用，這裡的綁定是必要的：
-        this.handleClick = this.handleClick.bind(this);
+    // 為了讓 `this` 能在 callback 中被使用，這裡的綁定是必要的：
+    this.handlePlayPause = this.handlePlayPause.bind(this);
+    this.loadCompas = this.loadCompas.bind(this);
+    this.saveCompas = this.saveCompas.bind(this);
+    //    this.compasArray = {};
+
+
+    this.loadCompas();
+  }
+
+  createTable(datas) {
+    for (let element of datas) {
     }
+  }
+  async loadCompas() {
+    await this.theEditor.loadJson().then(datas => {
+      //      this.compasArray = datas;
+      this.setState({ compasArray: datas });
+      console.log('loadCompas: ', datas);
+      console.log('this.states: ', this.states);
 
-    handleClick() {
-        this.setState(state => ({
-            isToggleOn: !state.isToggleOn
-        }));
-        this.theEditor.startStop();
-    }
-    state = {
-        ingredients: null,
-        totalPrice: 4,
-        purchasable: false,
-        purchasing: false,
-        loading: false,
-        error: false
-    }
+    });
+  }
 
-    componentDidMount () {
-        serverapi.get( 'compas.json' )
-            .then( response => {
-                console.log('response: ', response);
-                this.setState( { ingredients: response.data } );
-            } )
-            .catch( error => {
-                this.setState( { error: true } );
-            } );
-    }
+  saveCompas() {
+    this.theEditor.saveJson();
+  }
 
-    // updatePurchaseState ( ingredients ) {
-    //     const sum = Object.keys( ingredients )
-    //         .map( igKey => {
-    //             return ingredients[igKey];
-    //         } )
-    //         .reduce( ( sum, el ) => {
-    //             return sum + el;
-    //         }, 0 );
-    //     this.setState( { purchasable: sum > 0 } );
-    // }
+  handlePlayPause() {
+    this.setState(state => ({
+      isToggleOn: !state.isToggleOn
+    }));
+    this.theEditor.startStop();
+  }
+  state = {
+    ingredients: null,
+    totalPrice: 4,
+    purchasable: false,
+  }
 
-    // addIngredientHandler = ( type ) => {
-    //     const oldCount = this.state.ingredients[type];
-    //     const updatedCount = oldCount + 1;
-    //     const updatedIngredients = {
-    //         ...this.state.ingredients
-    //     };
-    //     updatedIngredients[type] = updatedCount;
-    //     const priceAddition = INGREDIENT_PRICES[type];
-    //     const oldPrice = this.state.totalPrice;
-    //     const newPrice = oldPrice + priceAddition;
-    //     this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
-    //     this.updatePurchaseState( updatedIngredients );
-    // }
+  componentDidMount() {
+    serverapi.get('compas.json')
+      .then(response => {
+        console.log('response: ', response);
+        this.setState({ ingredients: response.data });
+      })
+      .catch(error => {
+        this.setState({ error: true });
+      });
+  }
 
-    // removeIngredientHandler = ( type ) => {
-    //     const oldCount = this.state.ingredients[type];
-    //     if ( oldCount <= 0 ) {
-    //         return;
-    //     }
-    //     const updatedCount = oldCount - 1;
-    //     const updatedIngredients = {
-    //         ...this.state.ingredients
-    //     };
-    //     updatedIngredients[type] = updatedCount;
-    //     const priceDeduction = INGREDIENT_PRICES[type];
-    //     const oldPrice = this.state.totalPrice;
-    //     const newPrice = oldPrice - priceDeduction;
-    //     this.setState( { totalPrice: newPrice, ingredients: updatedIngredients } );
-    //     this.updatePurchaseState( updatedIngredients );
-    // }
 
-    // purchaseHandler = () => {
-    //     this.setState( { purchasing: true } );
-    // }
+  render() {
 
-    // purchaseCancelHandler = () => {
-    //     this.setState( { purchasing: false } );
-    // }
+    // const data = [{ "name": "test1" }, { "name": "test2" }];
+    // const listItems = data.map((d) =>
+    //   <li key={d.name}>{d.name}</li>
+    // );
+    let listItems = [];
+    let header = [];
+    if (undefined != this.state.compasArray) {
+      const data = [{ "name": "test1" }, { "name": "test2" }];
+      header = (<tr>
+        <td>*</td>
+        <td>Speed</td>
+      </tr>);
+      listItems = this.state.compasArray.map((compas, index) =>
+        <tr key={index}>
+          <td>{compas.no}</td>
+          <td>{compas.Speed}</td>
+        </tr >
+      );
 
-    // purchaseContinueHandler = () => {
-    //     // alert('You continue!');
-        
-    //     const queryParams = [];
-    //     for (let i in this.state.ingredients) {
-    //         queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-    //     }
-    //     queryParams.push('price=' + this.state.totalPrice);
-    //     const queryString = queryParams.join('&');
-    //     this.props.history.push({
-    //         pathname: '/checkout',
-    //         search: '?' + queryString
-    //     });
-    // }
 
-    render () {
-
-        // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
-
-        // const disabledInfo = {
-        //     ...this.state.ingredients
-        // };
-        // for ( let key in disabledInfo ) {
-        //     disabledInfo[key] = disabledInfo[key] <= 0
-        // }
-        // let orderSummary = null;
-        // let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
-
-        // if ( this.state.ingredients ) {
-        //     burger = (
-        //         <Aux>
-        //             <Burger ingredients={this.state.ingredients} />
-        //             <BuildControls
-        //                 ingredientAdded={this.addIngredientHandler}
-        //                 ingredientRemoved={this.removeIngredientHandler}
-        //                 disabled={disabledInfo}
-        //                 purchasable={this.state.purchasable}
-        //                 ordered={this.purchaseHandler}
-        //                 price={this.state.totalPrice} />
-        //         </Aux>
-        //     );
-        //     orderSummary = <OrderSummary
-        //         ingredients={this.state.ingredients}
-        //         price={this.state.totalPrice}
-        //         purchaseCancelled={this.purchaseCancelHandler}
-        //         purchaseContinued={this.purchaseContinueHandler} />;
-        // }
-        // if ( this.state.loading ) {
-        //     orderSummary = <Spinner />;
-        // }
-        // {salad: true, meat: false, ...}
+      this.state.compasArray.map((rowvalue, index) => {
         return (
-            <div>
-                <button id="play" onClick={this.handleClick}>
-                {this.state.isToggleOn ? 'Play' : 'Stop'}
-                </button>
-                <h1>We hope it tastes well!</h1>
-                <p>editor</p>
-            </div>
-            // <Aux>
-            //     <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
-            //         {orderSummary}
-            //     </Modal>
-            //     {burger}
-            // </Aux>
-        );
+          <tr key={index}>
+            <td>{rowvalue.Palo}</td>
+            <td>{rowvalue.no}</td>
+            <td>{rowvalue.Speed}</td>
+          </tr>
+        )
+      })
     }
+    // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
+    return (
+      <div>
+        <h1>Flamenco Metronome Editor</h1>
+        <Button variant="primary" onClick={this.loadCompas}>Load</Button>{' '}
+        <Button variant="success" onClick={this.saveCompas}>Save</Button>{' '}
+        <Button variant="warning" onClick={this.handlePlayPause}>
+          {this.state.isToggleOn ? 'Play' : 'Stop'}
+        </Button>
+        <div>
+          <Table striped bordered hover>
+            <thead>
+              {header}
+              <tr>
+              </tr>
+            </thead>
+            <tbody>
+              {listItems}
+              <tr>
+                <td>1</td>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <td key={index}>Table cell {index}</td>
+                ))}
+              </tr>
+              <tr>
+                <td>2</td>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <td key={index}>Table cell {index}</td>
+                ))}
+              </tr>
+              <tr>
+                <td>3</td>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <td key={index}>Table cell {index}</td>
+                ))}
+              </tr>
+            </tbody>
+          </Table>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default Editor;

@@ -1,5 +1,7 @@
 
+//https://github.com/FormidableLabs/react-music/issues/56
 import sound from "./Clap_bright.wav"
+
 let endtime = new Date().getTime();
 // let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
 //     1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0 ];
@@ -105,7 +107,7 @@ class MetronomeCore {
             } else if (self.tempoBpm) {
                 console.log('beatCounter: ', beatCounter, 
                     ' ,soundIdx: ', soundIdx);
-                if (beatCounter == 0 ) {
+                if (0 === beatCounter) {
                     soundIdx = 0;
                 }
 
@@ -127,23 +129,23 @@ class MetronomeCore {
 
                 beatCounter++;
                 // change compas
-                if (beatPattern.length == beatCounter) {
+                if (beatPattern.length === beatCounter) {
                     beatCounter = beatCounter % beatPattern.length;
                     self.compasNo += 1;
                     console.log('beatCounter: ', beatCounter, ', self.compasNo:', self.compasNo);
                 }
 
                 // debugging.
-                let diff = new Date().getTime() - endtime;
-                endtime = new Date().getTime();
-//                console.log('endtime: ', endtime, ', diff: ', diff);
+                // let diff = new Date().getTime() - endtime;
+                // endtime = new Date().getTime();
+                // console.log('endtime: ', endtime, ', diff: ', diff);
             }
         }
         schedule();
     }
 
     startStop() {
-        const ms = this;
+//        const ms = this;
 
         if (this.running = !this.running) {
             this.playMetronome();
