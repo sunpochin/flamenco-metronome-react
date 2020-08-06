@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
-import { Route, Switch} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Editor from './containers/Editor/Editor';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './App.css';
 
 
 class App extends Component {
-  render () {
+  render() {
     return (
-        <Switch>
-            <Route path="/" component={Editor} />
-        </Switch>
+      <Switch>
+        <Route path="/" component={Editor} />
+      </Switch>
     );
   }
 }

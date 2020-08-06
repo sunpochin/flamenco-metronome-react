@@ -21,8 +21,8 @@ class Editor extends Component {
     this.handlePlayPause = this.handlePlayPause.bind(this);
     this.loadCompas = this.loadCompas.bind(this);
     this.saveCompas = this.saveCompas.bind(this);
-    //    this.compasArray = {};
-
+    this.handleAdd = this.handleAdd.bind(this);
+    this.handleDel = this.handleDel.bind(this);
 
     this.loadCompas();
   }
@@ -44,6 +44,23 @@ class Editor extends Component {
   saveCompas() {
     this.theEditor.saveJson();
   }
+
+  handleAdd = function (e) {
+    const idx = e.target.getAttribute("data-index");
+    let newArray = this.state.compasArray.slice();
+    let newItem = newArray[idx - 1];
+    console.log('add: ', idx); //will log the index of the clicked item
+    console.log('newArray: ', newArray, 'type: ', typeof (newArray));
+    console.log('newItem: ', newItem);
+    newArray.splice(idx, 0, newItem);
+    console.log('newArray: ', newArray);
+    this.setState({ compasArray: newArray });
+  };
+
+
+  handleDel = function (e) {
+    console.log('delete: ', e.target.getAttribute("data-index")); //will log the index of the clicked item
+  };
 
   handlePlayPause() {
     this.setState(state => ({
@@ -78,28 +95,24 @@ class Editor extends Component {
     let listItems = [];
     let header = [];
     if (undefined != this.state.compasArray) {
-      const data = [{ "name": "test1" }, { "name": "test2" }];
       header = (<tr>
+        <td></td>
         <td>*</td>
+        <td>Palo</td>
         <td>Speed</td>
+        <td>SType</td>
       </tr>);
       listItems = this.state.compasArray.map((compas, index) =>
         <tr key={index}>
+          <td></td>
           <td>{compas.no}</td>
+          <td>{compas.Palo}</td>
           <td>{compas.Speed}</td>
+          <td>{compas.SType}</td>
+          <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">ins</Button></td>
+          <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">del</Button></td>
         </tr >
       );
-
-
-      this.state.compasArray.map((rowvalue, index) => {
-        return (
-          <tr key={index}>
-            <td>{rowvalue.Palo}</td>
-            <td>{rowvalue.no}</td>
-            <td>{rowvalue.Speed}</td>
-          </tr>
-        )
-      })
     }
     // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
     return (
@@ -110,33 +123,15 @@ class Editor extends Component {
         <Button variant="warning" onClick={this.handlePlayPause}>
           {this.state.isToggleOn ? 'Play' : 'Stop'}
         </Button>
+        <div>Compas table ====
+        </div>
         <div>
           <Table striped bordered hover>
             <thead>
               {header}
-              <tr>
-              </tr>
             </thead>
             <tbody>
               {listItems}
-              <tr>
-                <td>1</td>
-                {Array.from({ length: 12 }).map((_, index) => (
-                  <td key={index}>Table cell {index}</td>
-                ))}
-              </tr>
-              <tr>
-                <td>2</td>
-                {Array.from({ length: 12 }).map((_, index) => (
-                  <td key={index}>Table cell {index}</td>
-                ))}
-              </tr>
-              <tr>
-                <td>3</td>
-                {Array.from({ length: 12 }).map((_, index) => (
-                  <td key={index}>Table cell {index}</td>
-                ))}
-              </tr>
             </tbody>
           </Table>
         </div>
