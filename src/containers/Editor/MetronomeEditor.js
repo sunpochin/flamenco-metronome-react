@@ -1,11 +1,6 @@
 import $ from 'jquery';
-import { postCompas, getCompas } from './serverapi.js';
 import { MetronomeCore, VisSettings } from './MetronomeCore.js';
 
-// import axios from 'axios';
-// import MetronomeWorker from './MetronomeWorker.js';
-// import {postCompas, getCompas} from './server-api.js';
-// const SpeedType = 'subida';
 
 let self = null;
 let arrayPalo = ["Alegrias", "Tangos", "Soleares", "Bulerias"];
@@ -45,14 +40,14 @@ class MetronomeEditor {
         visTypeSelectId, startStopId) {
         // console.log('constructor: ' );
         self = this;
-        // mimicing private variables: https://stackoverflow.com/a/28165599/720276
-        let _datas = [];
-        self.setDatas = function (datas) { _datas = datas; }
-        self.getDatas = function () { return _datas; }
-        self.getDataByIdx = function (idx) { return _datas[idx]; }
-        self.insertDatas = function (idx, aCompas) {
-            _datas.splice(idx, 0, aCompas);
-        }
+        // // mimicing private variables: https://stackoverflow.com/a/28165599/720276
+        // let _datas = [];
+        // self.setDatas = function (datas) { _datas = datas; }
+        // self.getDatas = function () { return _datas; }
+        // self.getDataByIdx = function (idx) { return _datas[idx]; }
+        // self.insertDatas = function (idx, aCompas) {
+        //     _datas.splice(idx, 0, aCompas);
+        // }
 
         self.visSettings = visSettings;
         self.soundSelectId = soundSelectId || 'soundSelect';
@@ -63,13 +58,14 @@ class MetronomeEditor {
             setTempo: (t) => visSettings.tempoBpm = t,
             setStartTime: (t) => visSettings.startTime = t
         };
-        self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
+        self.metroCore = new MetronomeCore(
+            soundsPath, sounds, metroSoundListener);
         console.log('soundsPath: ', soundsPath);
 
-        self.createButtons();
-        self.loadJson();
 
-        visSettings.getTime = () => self.metroWorker.audioContext.currentTime;
+        self.createButtons();
+
+        visSettings.getTime = () => self.metroCore.audioContext.currentTime;
 
         // var btnplaymetronome = document.getElementById('playmetronome');
         // btnplaymetronome.addEventListener("click", function() {
@@ -80,8 +76,8 @@ class MetronomeEditor {
 
     // start of stop the beating.
     startStop() {
-        self.metroWorker.startStop();
-        $('#' + self.startStopID).val(self.metroWorker.running ? 'Stop' : 'Start')
+        self.metroCore.startStop();
+        $('#' + self.startStopID).val(self.metroCore.running ? 'Stop' : 'Start')
     }
 
     createButtons() {
@@ -123,7 +119,7 @@ class MetronomeEditor {
     }
 
     setAudioContext(audio) {
-        self.metroWorker.setAudioContext(audio);
+        self.metroCore.setAudioContext(audio);
     }
 
     SetupSelection() {
@@ -155,7 +151,7 @@ class MetronomeEditor {
                     console.log('local json');
 
                     self.setDatas(json);
-                    self.metroWorker.setCompasTable(json);
+                    self.metroCore.setCompasTable(json);
                     //                self.tableCreate();
                     console.log('json: ', json)
                     // console.log('this.datas: ', this.datas)
@@ -168,38 +164,6 @@ class MetronomeEditor {
         this.SetupSelection();
     }
 
-    loadJson() {
-        return getCompas()
-            .then(response => response)
-            .then(response => {
-                console.log('from server: ', (response.data),
-                    ', json.length: ', response.data.length);
-
-                if (response.data.length > 0) {
-                    // let json = JSON.stringify(res.data);
-                    // console.log('from server, ', json);
-
-                    self.setDatas(response.data);
-                    self.metroWorker.setCompasTable(response.data);
-                    //                    self.tableCreate();
-                } else {
-                    // go on load from local.
-                    self.localJson();
-                }
-                return response.data;
-            });
-    }
-
-    saveJson() {
-        postCompas(self.getDatas());
-
-        // let jsonData = JSON.stringify(self.getDatas());
-        // var blob = new Blob([jsonData], {type: "application/json"});
-        // var saveAs = window.saveAs;
-        // saveAs(blob, "my_outfile.json");
-        // console.log('jsonData: ', jsonData);
-        // download(jsonData, 'json.txt', 'text/plain');
-    }
 
     // https://stackoverflow.com/questions/14643617/create-table-using-javascript
     // https://www.valentinog.com/blog/html-table/
@@ -374,7 +338,7 @@ class MetronomeEditor {
      * @param bpm tempo in beats per minute
      */
     setTempo(bpm) {
-        this.metroWorker.setTempo(bpm);
+        this.metroCore.setTempo(bpm);
     }
 
     /**
@@ -382,7 +346,7 @@ class MetronomeEditor {
      * @param bpm tempo in beats per minute
      */
     setPalo(type) {
-        this.metroWorker.setPalo(type);
+        this.metroCore.setPalo(type);
     }
 
     addCompas(element) {
@@ -415,7 +379,7 @@ class MetronomeEditor {
      * @param number the one-based sound index
      */
     setSound(number) {
-        this.metroWorker.setSound(number);
+        this.metroCore.setSound(number);
     }
 
     /**

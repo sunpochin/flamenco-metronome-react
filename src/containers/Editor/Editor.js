@@ -2,7 +2,8 @@ import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
 import { serverapi } from './serverapi.js';
 import MetronomeEditor from './MetronomeEditor.js';
-import { VisSettings } from './MetronomeCore.js';
+import MetronomeModel from './MetronomeModel.js';
+import { VisSettings, MetronomeCore } from './MetronomeCore.js';
 
 class Editor extends Component {
   constructor(props) {
@@ -10,21 +11,36 @@ class Editor extends Component {
     //        this.state = {...};
     //        self = this;
     this.state = { compasArray: [] };
-    this.theEditor = new MetronomeEditor('./res/audio/',
-      ['Low_Bongo.wav', 'Clap_bright.wav',],
-      VisSettings);
-    this.theEditor.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
+    // this.theEditor = new MetronomeEditor('./res/audio/',
+    //   ['Low_Bongo.wav', 'Clap_bright.wav',],
+    //   VisSettings);
+    // this.theEditor.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
+    let soundsPath = './res/audio/';
+    let sounds = ['Low_Bongo.wav', 'Clap_bright.wav',];
+    const metroSoundListener = {
+      setTempo: (t) => VisSettings.tempoBpm = t,
+      setStartTime: (t) => VisSettings.startTime = t
+    };
+    this.metroCore = new MetronomeCore(
+      soundsPath, sounds, metroSoundListener);
+    this.metroCore.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
+
+    console.log('soundsPath: ', soundsPath);
+
+    this.theModel = new MetronomeModel();
+    this.theModel.setCore(this.metroCore);
 
     this.state = { isToggleOn: true };
 
-    // 為了讓 `this` 能在 callback 中被使用，這裡的綁定是必要的：
+    this.loadCompas();
+
+    // for 'this' could be used in callback, we have to bind it here.
     this.handlePlayPause = this.handlePlayPause.bind(this);
     this.loadCompas = this.loadCompas.bind(this);
     this.saveCompas = this.saveCompas.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
     this.handleDel = this.handleDel.bind(this);
-
-    this.loadCompas();
+    this.handlePlayHere = this.handlePlayHere.bind(this);
   }
 
   createTable(datas) {
@@ -32,12 +48,10 @@ class Editor extends Component {
     }
   }
   async loadCompas() {
-    await this.theEditor.loadJson().then(datas => {
-      //      this.compasArray = datas;
+    await this.theModel.loadJson().then(datas => {
       this.setState({ compasArray: datas });
       console.log('loadCompas: ', datas);
       console.log('this.states: ', this.states);
-
     });
   }
 
@@ -62,11 +76,15 @@ class Editor extends Component {
     console.log('delete: ', e.target.getAttribute("data-index")); //will log the index of the clicked item
   };
 
+  handlePlayHere = function (e) {
+    console.log('delete: ', e.target.getAttribute("data-index")); //will log the index of the clicked item
+  };
+
   handlePlayPause() {
     this.setState(state => ({
       isToggleOn: !state.isToggleOn
     }));
-    this.theEditor.startStop();
+    this.metroCore.startStop();
   }
   state = {
     ingredients: null,
@@ -85,9 +103,7 @@ class Editor extends Component {
       });
   }
 
-
   render() {
-
     // const data = [{ "name": "test1" }, { "name": "test2" }];
     // const listItems = data.map((d) =>
     //   <li key={d.name}>{d.name}</li>
@@ -109,8 +125,12 @@ class Editor extends Component {
           <td>{compas.Palo}</td>
           <td>{compas.Speed}</td>
           <td>{compas.SType}</td>
-          <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">ins</Button></td>
-          <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">del</Button></td>
+          <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">
+            ins</Button></td>
+          <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">
+            del</Button></td>
+          <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
+            play</Button></td>
         </tr >
       );
     }

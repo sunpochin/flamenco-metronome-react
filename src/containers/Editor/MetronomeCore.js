@@ -6,10 +6,10 @@ let endtime = new Date().getTime();
 // let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
 //     1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0 ];
 let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
-    1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0 ];
+    1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0];
 // let beatAlegriasTraditional = [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
 //         1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
-    
+
 let beatTangos = [0, 1.0, 0.5, 0.5, 1.0, 1.0];
 
 let self = null;
@@ -28,7 +28,7 @@ class MetronomeCore {
     constructor(soundsPath, sounds, listener) {
         self = this;
         this.soundsPath = soundsPath;
-        const dummyListener = { setTempo: (t) => {}, setStartTime: (t) => {} };
+        const dummyListener = { setTempo: (t) => { }, setStartTime: (t) => { } };
         this.listener = listener || dummyListener;
         this.running = false;
         this.tempoBpm = 140;
@@ -70,7 +70,6 @@ class MetronomeCore {
         // cell.innerHTML = "==>";
     }
 
-
     setCompasTable(compasJson) {
         self.compasJson = compasJson;
     }
@@ -87,10 +86,15 @@ class MetronomeCore {
             // update the indicator when start beating.
             self.updateCompasIndicator();
 
+
+            if (0 == self.compasJson.length) {
+                alert('compas table empty!');
+                return;
+            }
             const speed = self.compasJson[self.compasNo]['Speed'];
             // console.log('typeof', typeof(self.compasNo), ' ,compas no: ', self.compasNo, ', speed: ', speed);
             // console.log('speed: ', speed)
-            if (undefined !== speed ) {
+            if (undefined !== speed) {
                 // change speed only when it's a valid Map.get() result.
                 self.tempoBpm = speed;
             }
@@ -105,7 +109,7 @@ class MetronomeCore {
             if (soundIdx >= self.soundFiles.buffers.length) {
                 alert('Sound files are not yet loaded')
             } else if (self.tempoBpm) {
-                console.log('beatCounter: ', beatCounter, 
+                console.log('beatCounter: ', beatCounter,
                     ' ,soundIdx: ', soundIdx);
                 if (0 === beatCounter) {
                     soundIdx = 0;
@@ -145,7 +149,7 @@ class MetronomeCore {
     }
 
     startStop() {
-//        const ms = this;
+        //        const ms = this;
 
         if (this.running = !this.running) {
             this.playMetronome();
@@ -176,7 +180,7 @@ class AudioFiles {
                 (buffer) => self.buffers[index] = buffer,
                 (error) => console.error('decode Audio Data error', error));
 
-//            xhr.open("GET", url);
+            //            xhr.open("GET", url);
             xhr.open("GET", sound);
             xhr.send();
         });
@@ -205,4 +209,4 @@ class AudioFiles {
 
 //exports MetronomeCore;
 //module export MetronomeCore;
-export {MetronomeCore, VisSettings};
+export { MetronomeCore, VisSettings };
