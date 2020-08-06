@@ -11,10 +11,6 @@ class Editor extends Component {
     //        this.state = {...};
     //        self = this;
     this.state = { compasArray: [] };
-    // this.theEditor = new MetronomeEditor('./res/audio/',
-    //   ['Low_Bongo.wav', 'Clap_bright.wav',],
-    //   VisSettings);
-    // this.theEditor.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
     let soundsPath = './res/audio/';
     let sounds = ['Low_Bongo.wav', 'Clap_bright.wav',];
     const metroSoundListener = {
@@ -23,7 +19,12 @@ class Editor extends Component {
     };
     this.metroCore = new MetronomeCore(
       soundsPath, sounds, metroSoundListener);
-    this.metroCore.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
+
+    console.log('this.props.isUnitTest:', this.props.isUnitTest);
+    if (true == this.props.isUnitTest) {
+    } else {
+      this.metroCore.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
+    }
 
     console.log('soundsPath: ', soundsPath);
 
