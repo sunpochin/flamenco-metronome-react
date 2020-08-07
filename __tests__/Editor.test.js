@@ -1,28 +1,30 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import Editor from './containers/Editor/Editor';
-import MetronomeModel from './containers/Editor/MetronomeModel.js';
+import Editor from '../src/containers/Editor/Editor';
+import MetronomeModel from '../src/containers/Editor/MetronomeModel.js';
 
 // https://stackoverflow.com/questions/42535270/regeneratorruntime-is-not-defined-when-running-jest-test
 import 'regenerator-runtime/runtime';
 
-import { shallow } from 'enzyme';
+import Enzyme, { shallow } from 'enzyme'
+import EnzymeAdapter from 'enzyme-adapter-react-16'
+Enzyme.configure({
+  adapter: new EnzymeAdapter()
+})
 
 
-test('renders learn react link', () => {
+test('renders of Editor', () => {
+
   const isUnitTest = true;
-  //  const welcome = shallow(<Editor isUnitTest={isUnitTest} />);
-  const welcome = shallow(<Editors />);
-  expect(welcome).toContain('Flamenco Metronome Editor');
-
+  const wrapper = shallow(<Editor isUnitTest={isUnitTest} />);
+  //  const wrapper = shallow(<Editor />);
+  console.log(wrapper.debug());
+  expect(wrapper.debug()).toContain('Flamenco Metronome Editor');
 
   // const { getByText } = render(
   //   // <BrowserRouter>
   //   //    shallow(<Editor isUnitTest={isUnitTest} />)
-  //   // </BrowserRouter>
-  //   // <BrowserRouter>
-  //   //   <Editor isUnitTest={isUnitTest} />
   //   // </BrowserRouter>
   // );
   // const linkElement = getByText(/Flamenco Metronome Editor/i);

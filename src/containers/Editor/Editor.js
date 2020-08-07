@@ -1,7 +1,6 @@
 import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
 import { serverapi } from './serverapi.js';
-import MetronomeEditor from './MetronomeEditor.js';
 import MetronomeModel from './MetronomeModel.js';
 import { VisSettings, MetronomeCore } from './MetronomeCore.js';
 
@@ -134,7 +133,7 @@ class Editor extends Component {
             play</Button></td>
         </tr >
       );
-    }
+    };
     // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
     return (
       <div>
@@ -157,7 +156,7 @@ class Editor extends Component {
           </Table>
         </div>
       </div>
-    )
+    );
   }
 }
 

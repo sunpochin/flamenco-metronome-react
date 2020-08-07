@@ -1,6 +1,6 @@
 
-//import clapsound from "./Clap_bright.wav";
-let clapsound = "./Clap_bright.wav";
+import clapsound from "./Clap_bright.wav";
+//let clapsound = "./Clap_bright.wav";
 //https://github.com/FormidableLabs/react-music/issues/56
 
 let endtime = new Date().getTime();

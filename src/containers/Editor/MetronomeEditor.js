@@ -183,11 +183,6 @@ class MetronomeEditor {
             th.appendChild(text);
             row.appendChild(th);
         }
-        // th = document.createElement("th");
-        // text = document.createTextNode("+");
-        // th.appendChild(text);
-        // row.appendChild(th);
-
         var iBtn = document.createElement('button');
         let colID = "add_" + 0;
         iBtn.setAttribute("id", colID);
