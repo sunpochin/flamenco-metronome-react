@@ -23,13 +23,10 @@ test('MetronomeCore test', () => {
     setTempo: (t) => VisSettings.tempoBpm = t,
     setStartTime: (t) => VisSettings.startTime = t
   };
-
   // https://stackoverflow.com/a/46185630/720276
   const testCore = new MetronomeCore(metroSoundListener);
-
   // const testCore = new MetronomeCore(soundsPath, sounds,
   //   metroSoundListener);
-
   // audioContext = new (window.AudioContext || window.webkitAudioContext)();
   // const urls = this.sounds.map(name => this.soundsPath + name);
   // soundFiles = new AudioFiles(this.audioContext, urls);

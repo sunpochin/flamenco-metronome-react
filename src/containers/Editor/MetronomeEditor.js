@@ -344,31 +344,6 @@ class MetronomeEditor {
         this.metroCore.setPalo(type);
     }
 
-    addCompas(element) {
-        console.log('addCompas element: ', element);
-        const toStr = (element.id).toString();
-
-        const compasIdx = parseInt(toStr.replace('add_', ''));
-        console.log('addCompas, compasNo: ', element.id,
-            ', toStr: ', toStr, ', compasIdx: ', compasIdx);
-        let aJson = {
-            'no': '0',
-            'Palo': 'Alegrias',
-            'Speed': 300,
-            'SType': 'Constant'
-        };
-        aJson['no'] = compasIdx.toString();
-
-        self.insertDatas(compasIdx, aJson);
-        for (let idx = compasIdx + 1; idx < self.getDatas().length; idx++) {
-            console.log('idx: ', idx, ', self.getDataByIdx(idx): ',
-                self.getDataByIdx(idx));
-            let oldNo = parseInt(self.getDataByIdx(idx)['no'], 10);
-            self.getDataByIdx(idx)['no'] = oldNo + 1;
-        }
-        //        self.tableCreate();
-    }
-
     /**
      * Sets the metronome sound.
      * @param number the one-based sound index

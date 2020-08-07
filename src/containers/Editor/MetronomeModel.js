@@ -8,7 +8,10 @@ class MetronomeModel {
     self = this;
     // mimicing private variables: https://stackoverflow.com/a/28165599/720276
     let _datas = [];
-    self.setDatas = function (datas) { _datas = datas; }
+    self.setDatas = function (datas) {
+      _datas = datas;
+      console.log('in setData: ', _datas);
+    }
     self.getDatas = function () { return _datas; }
     self.getDataByIdx = function (idx) { return _datas[idx]; }
     self.insertDatas = function (idx, aCompas) {
@@ -52,6 +55,17 @@ class MetronomeModel {
     // console.log('jsonData: ', jsonData);
     // download(jsonData, 'json.txt', 'text/plain');
   }
+
+  insertCompas(compasIdx) {
+    let actualIdx = compasIdx - 1;
+    console.log('_datas:', this.getDataByIdx(compasIdx), ', compasIdx: ', compasIdx);
+    let aCompas = this.getDataByIdx(actualIdx);
+
+    this.insertDatas(actualIdx, aCompas);
+    //        self.tableCreate();
+  }
+
+
 }
 
 export default MetronomeModel;

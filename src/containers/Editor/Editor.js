@@ -53,9 +53,10 @@ class Editor extends Component {
   }
   async loadCompas() {
     await this.theModel.loadJson().then(datas => {
-      this.setState({ compasArray: datas });
-      console.log('loadCompas: ', datas);
-      console.log('this.states: ', this.states);
+      this.theModel.setDatas(datas);
+      this.setState({ compasArray: this.theModel.getDatas() });
+      // console.log('loadCompas: ', datas);
+      // console.log('this.states: ', this.states);
     });
   }
 
@@ -65,14 +66,8 @@ class Editor extends Component {
 
   handleAdd = function (e) {
     const idx = e.target.getAttribute("data-index");
-    let newArray = this.state.compasArray.slice();
-    let newItem = newArray[idx - 1];
-    console.log('add: ', idx); //will log the index of the clicked item
-    console.log('newArray: ', newArray, 'type: ', typeof (newArray));
-    console.log('newItem: ', newItem);
-    newArray.splice(idx, 0, newItem);
-    console.log('newArray: ', newArray);
-    this.setState({ compasArray: newArray });
+    this.theModel.insertCompas(idx);
+    this.setState({ compasArray: this.theModel.getDatas() });
   };
 
 

@@ -19,18 +19,14 @@ const VisSettings = {
     names: ['Spinning Circle', 'Circle']
 };
 
-
-//export default class MetronomeCore {
 export default class MetronomeCore {
     constructor(listener) {
         self = this;
-        //        this.soundsPath = soundsPath;
         const dummyListener = { setTempo: (t) => { }, setStartTime: (t) => { } };
         this.listener = listener || dummyListener;
         this.running = false;
         this.tempoBpm = 140;
         this.soundNum = 1;
-        //        this.sounds = sounds;
         this.compasNo = 0;
     }
 
@@ -173,14 +169,4 @@ export default class MetronomeCore {
 
 
 
-// module.exports = {
-//     MetronomeCore
-// }
-
-// modules.exports = {
-//     MetronomeCore
-// }
-
-//exports MetronomeCore;
-//module export MetronomeCore;
 export { MetronomeCore, VisSettings };
