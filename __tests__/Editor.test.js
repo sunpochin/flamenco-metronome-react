@@ -33,14 +33,14 @@ test('MetronomeCore test', () => {
   let audioContext = null;
   let soundFiles = null;
   testCore.setAudioContext(audioContext, soundFiles);
-  console.log('testCore: ', testCore);
+  //  console.log('testCore: ', testCore);
 });
 
 test('renders of Editor', () => {
   const isUnitTest = true;
   const wrapper = shallow(<Editor isUnitTest={isUnitTest} />);
   //  const wrapper = shallow(<Editor />);
-  console.log(wrapper.debug());
+  //  console.log(wrapper.debug());
   expect(wrapper.debug()).toContain('Flamenco Metronome Editor');
 
   // const { getByText } = render(
@@ -78,26 +78,34 @@ test('test model', () => {
 });
 
 
-describe('test model', () => {
-  test('test load data 2', () => {
-    let theModel = new MetronomeModel();
-    theModel.loadJson().then(data => {
-      const len = theModel.getDatas().length;
-      console.log('len: ', len);
-      expect(len).toBeGreaterThan(0);
-    });
-  });
+// describe('test model', () => {
+//   test('test model add compas', () => {
+//     let theModel = new MetronomeModel();
+//     theModel.insertCompas(0);
+//     const len = theModel.getDatas().length;
+//     console.log('len: ', len);
+//     expect(theModel.getDatas().length).toBe(1);
+//   });
 
-  test('test load data 3', () => {
-    console.log('data 3: ');
-    let theModel = new MetronomeModel();
-    theModel.loadJson().then(data => {
-      const len = theModel.getDatas().length;
-      console.log('len: ', len);
-      expect(len).toBeGreaterThan(0);
-    });
+//   test('test load data 2', () => {
+//     let theModel = new MetronomeModel();
+//     theModel.loadJson().then(data => {
+//       const len = theModel.getDatas().length;
+//       console.log('len: ', len);
+//       expect(len).toBeGreaterThan(0);
+//     });
+//   });
 
-  });
+//   test('test load data 3', () => {
+//     console.log('data 3: ');
+//     let theModel = new MetronomeModel();
+//     theModel.loadJson().then(data => {
+//       const len = theModel.getDatas().length;
+//       console.log('len: ', len);
+//       expect(len).toBeGreaterThan(0);
+//     });
 
-});
+//   });
+
+// });
 

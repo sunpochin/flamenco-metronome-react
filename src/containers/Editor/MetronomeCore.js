@@ -38,6 +38,9 @@ export default class MetronomeCore {
         this.tempoBpm = bpm;
     }
 
+    setNotifyChange(RenderView) {
+        this.RenderView = RenderView;
+    }
 
     setAudioContext(audioContext, soundFiles) {
         this.audioContext = audioContext;
@@ -56,6 +59,7 @@ export default class MetronomeCore {
     }
 
     updateCompasIndicator() {
+        this.RenderView();
         // let compasTable = document.getElementById('compas-table');
         // console.log('updateCompasIndicator: ', this.compasNo, ', compasTable: ', compasTable);
         // let cell = compasTable.rows[self.compasNo + 1].cells[0];

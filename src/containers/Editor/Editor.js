@@ -1,3 +1,4 @@
+import './Editor.css';
 import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
 import { serverapi } from './serverapi.js';
@@ -45,6 +46,14 @@ class Editor extends Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleDel = this.handleDel.bind(this);
     this.handlePlayHere = this.handlePlayHere.bind(this);
+
+    this.RenderView = this.RenderView.bind(this);
+    this.metroCore.setNotifyChange(this.RenderView);
+  }
+
+  RenderView() {
+    console.log('Editor.js, render view, this: ', this);
+    this.setState(this.state);
   }
 
   createTable(datas) {
@@ -107,8 +116,13 @@ class Editor extends Component {
     // const listItems = data.map((d) =>
     //   <li key={d.name}>{d.name}</li>
     // );
+    const compasNo = this.theModel.metroCore.compasNo;
+    console.log('render, compasNo: ', compasNo);
+
     let listItems = [];
     let header = [];
+    // <td>{index === compasNo ? "==>" : ""}</td>
+
     if (undefined != this.state.compasArray) {
       header = (<tr>
         <td></td>
@@ -118,8 +132,10 @@ class Editor extends Component {
         <td>SType</td>
       </tr>);
       listItems = this.state.compasArray.map((compas, index) =>
-        <tr key={index}>
-          <td></td>
+        <tr key={index}
+          className={index === compasNo ? "rowSelected" : ""}>
+          <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
+            play</Button></td>
           <td>{compas.no}</td>
           <td>{compas.Palo}</td>
           <td>{compas.Speed}</td>
@@ -128,8 +144,6 @@ class Editor extends Component {
             ins</Button></td>
           <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">
             del</Button></td>
-          <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
-            play</Button></td>
         </tr >
       );
     };
@@ -145,7 +159,7 @@ class Editor extends Component {
         <div>Compas table ====
         </div>
         <div>
-          <Table striped bordered hover>
+          <Table bordered hover table-primary>
             <thead>
               {header}
             </thead>
