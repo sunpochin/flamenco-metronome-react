@@ -93,7 +93,7 @@ class Editor extends Component {
   }
 
   saveCompas() {
-    this.theEditor.saveJson();
+    this.theModel.saveJson();
   }
 
   selectPalo() {
@@ -145,7 +145,6 @@ class Editor extends Component {
   }
 
   componentDidMount() {
-
     //    this.init();
     // serverapi.get('compas.json')
     //   .then(response => {
@@ -175,7 +174,8 @@ class Editor extends Component {
     //         <td>Palo</td>
     // <td>{compas.Palo}</td>
 
-    if (undefined !== this.state.compasArray) {
+    //    if (undefined !== this.state.compasArray) 
+    {
       header = (<tr>
         <td></td>
         <td>*</td>
@@ -183,10 +183,12 @@ class Editor extends Component {
         <td>SType</td>
         <td><Button id="" data-index={0} onClick={this.handleAdd} variant="warning">
           ins</Button></td>
+        <td></td>
       </tr>);
     }
-    if (undefined !== this.state.compasArray && this.state.compasArray.length > 0) {
-      listItems = this.state.compasArray.map((compas, index) =>
+    //if (undefined !== this.state.compasArray && this.state.compasArray.length > 0) 
+    {
+      listItems = this.theModel.getDatas().map((compas, index) =>
         <tr key={index}
           className={index === compasNo ? "rowSelected" : ""}>
           <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
@@ -202,7 +204,7 @@ class Editor extends Component {
       );
     };
 
-    defaultOption = PalosArray[0];
+    let defaultOption = PalosArray[0];
     // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
     return (
       <div>
