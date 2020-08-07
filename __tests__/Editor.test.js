@@ -1,21 +1,45 @@
+// https://github.com/facebook/jest/issues/2663#issuecomment-485017143
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import Editor from '../src/containers/Editor/Editor';
+import AudioFiles from '../src/containers/Editor/AudioFiles';
 import MetronomeModel from '../src/containers/Editor/MetronomeModel.js';
+import MetronomeCore from '../src/containers/Editor/MetronomeCore.js';
 
 // https://stackoverflow.com/questions/42535270/regeneratorruntime-is-not-defined-when-running-jest-test
 import 'regenerator-runtime/runtime';
-
 import Enzyme, { shallow } from 'enzyme'
 import EnzymeAdapter from 'enzyme-adapter-react-16'
+
 Enzyme.configure({
   adapter: new EnzymeAdapter()
 })
 
+test('MetronomeCore test', () => {
+  let soundsPath = './res/audio/';
+  let sounds = ['Low_Bongo.wav', 'Clap_bright.wav',];
+  const metroSoundListener = {
+    setTempo: (t) => VisSettings.tempoBpm = t,
+    setStartTime: (t) => VisSettings.startTime = t
+  };
+
+  // https://stackoverflow.com/a/46185630/720276
+  const testCore = new MetronomeCore(metroSoundListener);
+
+  // const testCore = new MetronomeCore(soundsPath, sounds,
+  //   metroSoundListener);
+
+  // audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  // const urls = this.sounds.map(name => this.soundsPath + name);
+  // soundFiles = new AudioFiles(this.audioContext, urls);
+  let audioContext = null;
+  let soundFiles = null;
+  testCore.setAudioContext(audioContext, soundFiles);
+  console.log('testCore: ', testCore);
+});
 
 test('renders of Editor', () => {
-
   const isUnitTest = true;
   const wrapper = shallow(<Editor isUnitTest={isUnitTest} />);
   //  const wrapper = shallow(<Editor />);

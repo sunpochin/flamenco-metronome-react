@@ -4,28 +4,32 @@ import { serverapi } from './serverapi.js';
 import MetronomeModel from './MetronomeModel.js';
 import { VisSettings, MetronomeCore } from './MetronomeCore.js';
 
+import AudioFiles from './AudioFiles.js';
+
 class Editor extends Component {
   constructor(props) {
     super(props);
     //        this.state = {...};
     //        self = this;
     this.state = { compasArray: [] };
-    let soundsPath = './res/audio/';
+
+    this.soundsPath = './res/audio/';
     let sounds = ['Low_Bongo.wav', 'Clap_bright.wav',];
     const metroSoundListener = {
       setTempo: (t) => VisSettings.tempoBpm = t,
       setStartTime: (t) => VisSettings.startTime = t
     };
-    this.metroCore = new MetronomeCore(
-      soundsPath, sounds, metroSoundListener);
+    this.metroCore = new MetronomeCore(metroSoundListener);
 
     console.log('this.props.isUnitTest:', this.props.isUnitTest);
     if (true == this.props.isUnitTest) {
     } else {
-      this.metroCore.setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
+      let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const urls = sounds.map(name => this.soundsPath + name);
+      console.log('urls: ', urls);
+      let soundFiles = new AudioFiles(audioContext, urls);
+      this.metroCore.setAudioContext(audioContext, soundFiles);
     }
-
-    console.log('soundsPath: ', soundsPath);
 
     this.theModel = new MetronomeModel();
     this.theModel.setCore(this.metroCore);

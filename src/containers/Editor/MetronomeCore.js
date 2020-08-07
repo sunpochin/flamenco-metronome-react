@@ -1,8 +1,4 @@
 
-import clapsound from "./Clap_bright.wav";
-//let clapsound = "./Clap_bright.wav";
-//https://github.com/FormidableLabs/react-music/issues/56
-
 let endtime = new Date().getTime();
 // let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
 //     1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0 ];
@@ -25,16 +21,16 @@ const VisSettings = {
 
 
 //export default class MetronomeCore {
-class MetronomeCore {
-    constructor(soundsPath, sounds, listener) {
+export default class MetronomeCore {
+    constructor(listener) {
         self = this;
-        this.soundsPath = soundsPath;
+        //        this.soundsPath = soundsPath;
         const dummyListener = { setTempo: (t) => { }, setStartTime: (t) => { } };
         this.listener = listener || dummyListener;
         this.running = false;
         this.tempoBpm = 140;
         this.soundNum = 1;
-        this.sounds = sounds;
+        //        this.sounds = sounds;
         this.compasNo = 0;
     }
 
@@ -47,10 +43,9 @@ class MetronomeCore {
     }
 
 
-    setAudioContext(audioContext) {
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const urls = this.sounds.map(name => this.soundsPath + name);
-        this.soundFiles = new AudioFiles(this.audioContext, urls);
+    setAudioContext(audioContext, soundFiles) {
+        this.audioContext = audioContext;
+        this.soundFiles = soundFiles;
     }
 
     /**
@@ -165,28 +160,6 @@ class MetronomeCore {
     }
 }
 
-class AudioFiles {
-    constructor(context, urlList) {
-        // console.log('context: ', context);
-        // console.log('urlList: ', urlList);
-        console.log('clapsound: ', clapsound);
-
-        const self = this;
-        self.buffers = [];
-
-        urlList.forEach((url, index) => {
-            const xhr = new XMLHttpRequest();
-            xhr.responseType = "arraybuffer";
-            xhr.onload = () => context.decodeAudioData(xhr.response,
-                (buffer) => self.buffers[index] = buffer,
-                (error) => console.error('decode Audio Data error', error));
-
-            //            xhr.open("GET", url);
-            xhr.open("GET", clapsound);
-            xhr.send();
-        });
-    }
-}
 
 //let compasTempoPair = [(1, 140), (4, 180), (7, 140), (8, 70) ];
 // var compasTempoMap = new Map([
