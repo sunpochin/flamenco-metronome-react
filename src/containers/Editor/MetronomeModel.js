@@ -17,7 +17,9 @@ class MetronomeModel {
     self.insertDatas = function (idx, aCompas) {
       _datas.splice(idx, 0, aCompas);
     }
-    //    self.loadJson();
+    self.deleteDatas = function (idx) {
+      _datas.splice(idx, 1);
+    }
 
   }
 
@@ -56,6 +58,12 @@ class MetronomeModel {
     // download(jsonData, 'json.txt', 'text/plain');
   }
 
+  deleteCompas(compasIdx) {
+    let actualIdx = compasIdx - 1;
+    console.log('_datas:', this.getDataByIdx(compasIdx), ', compasIdx: ', compasIdx);
+    this.deleteDatas(actualIdx);
+  }
+
   insertCompas(compasIdx) {
     let actualIdx = compasIdx - 1;
     console.log('_datas:', this.getDataByIdx(compasIdx), ', compasIdx: ', compasIdx);
@@ -64,7 +72,6 @@ class MetronomeModel {
     this.insertDatas(actualIdx, aCompas);
     //        self.tableCreate();
   }
-
 
 }
 

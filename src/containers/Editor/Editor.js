@@ -1,4 +1,6 @@
 import './Editor.css';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
 import { serverapi } from './serverapi.js';
@@ -6,13 +8,32 @@ import MetronomeModel from './MetronomeModel.js';
 import { VisSettings, MetronomeCore } from './MetronomeCore.js';
 
 import AudioFiles from './AudioFiles.js';
+let PalosArray = ['Alegrias', 'Soleares', 'Tangos', 'Bulerias'];
 
 class Editor extends Component {
   constructor(props) {
     super(props);
     //        this.state = {...};
     //        self = this;
-    this.state = { compasArray: [] };
+    let PalosArray = ['Alegrias', 'Soleares', 'Tangos', 'Bulerias'];
+    this.state = {
+      compasArray: [],
+      palosArr: PalosArray,
+      curPalo: 'default palo',
+    };
+    console.log('palosArr: ', this.state.palosArr, ', curPalo: ', this.state.curPalo);
+    this.state = { isToggleOn: true };
+    //    this.setState({ isToggleOn: true });
+
+    // this.setState({
+    //   compasArray: [],
+    //   palosArr: PalosArray,
+    //   curPalo: '',
+    // });
+    this.init();
+  }
+
+  init() {
 
     this.soundsPath = './res/audio/';
     let sounds = ['Low_Bongo.wav', 'Clap_bright.wav',];
@@ -23,7 +44,7 @@ class Editor extends Component {
     this.metroCore = new MetronomeCore(metroSoundListener);
 
     console.log('this.props.isUnitTest:', this.props.isUnitTest);
-    if (true == this.props.isUnitTest) {
+    if (true === this.props.isUnitTest) {
     } else {
       let audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const urls = sounds.map(name => this.soundsPath + name);
@@ -34,8 +55,6 @@ class Editor extends Component {
 
     this.theModel = new MetronomeModel();
     this.theModel.setCore(this.metroCore);
-
-    this.state = { isToggleOn: true };
 
     this.loadCompas();
 
@@ -49,6 +68,7 @@ class Editor extends Component {
 
     this.RenderView = this.RenderView.bind(this);
     this.metroCore.setNotifyChange(this.RenderView);
+
   }
 
   RenderView() {
@@ -56,14 +76,17 @@ class Editor extends Component {
     this.setState(this.state);
   }
 
-  createTable(datas) {
-    for (let element of datas) {
-    }
-  }
+  // createTable(datas) {
+  //   for (let element of datas) {
+  //   }
+  // }
+
   async loadCompas() {
     await this.theModel.loadJson().then(datas => {
       this.theModel.setDatas(datas);
-      this.setState({ compasArray: this.theModel.getDatas() });
+      this.setState(state => ({
+        compasArray: this.theModel.getDatas()
+      }));
       // console.log('loadCompas: ', datas);
       // console.log('this.states: ', this.states);
     });
@@ -73,19 +96,40 @@ class Editor extends Component {
     this.theEditor.saveJson();
   }
 
+  selectPalo() {
+    console.log('selectPalo: ');
+
+  }
+
+  handleDropdownSelected = function (e) {
+    const idx = e.target.getAttribute("data-index");
+    console.log('handleDel: ', e.target.getAttribute("data-index"));
+    let curPalo = this.state.palosArr[idx];
+    console.log('curPalo: ', curPalo);
+  }
+
   handleAdd = function (e) {
     const idx = e.target.getAttribute("data-index");
     this.theModel.insertCompas(idx);
-    this.setState({ compasArray: this.theModel.getDatas() });
+    this.setState(state => ({
+      compasArray: this.theModel.getDatas()
+    }));
   };
 
 
   handleDel = function (e) {
-    console.log('delete: ', e.target.getAttribute("data-index")); //will log the index of the clicked item
+    console.log('handleDel: ', e.target.getAttribute("data-index"));
+    const idx = e.target.getAttribute("data-index");
+    this.theModel.deleteCompas(idx);
+    this.setState(state => ({
+      compasArray: this.theModel.getDatas()
+    }));
   };
-
+  // play here.
   handlePlayHere = function (e) {
-    console.log('delete: ', e.target.getAttribute("data-index")); //will log the index of the clicked item
+    const idx = e.target.getAttribute("data-index");
+    this.theModel.metroCore.compasNo = idx;
+    this.setState(this.state);
   };
 
   handlePlayPause() {
@@ -101,43 +145,53 @@ class Editor extends Component {
   }
 
   componentDidMount() {
-    serverapi.get('compas.json')
-      .then(response => {
-        console.log('response: ', response);
-        this.setState({ ingredients: response.data });
-      })
-      .catch(error => {
-        this.setState({ error: true });
-      });
+
+    //    this.init();
+    // serverapi.get('compas.json')
+    //   .then(response => {
+    //     console.log('response: ', response);
+    //     this.setState(state => ({
+    //       compasArray: this.theModel.getDatas()
+    //     }));
+
+    //   })
+    //   .catch(error => {
+    //     this.setState({ error: true });
+    //   });
+  }
+
+  _onSelect = function (e) {
+    console.log('_onSelect: ', e);
+    // const idx = e.target.getAttribute("data-index");
   }
 
   render() {
-    // const data = [{ "name": "test1" }, { "name": "test2" }];
-    // const listItems = data.map((d) =>
-    //   <li key={d.name}>{d.name}</li>
-    // );
     const compasNo = this.theModel.metroCore.compasNo;
     console.log('render, compasNo: ', compasNo);
 
     let listItems = [];
     let header = [];
     // <td>{index === compasNo ? "==>" : ""}</td>
+    //         <td>Palo</td>
+    // <td>{compas.Palo}</td>
 
-    if (undefined != this.state.compasArray) {
+    if (undefined !== this.state.compasArray) {
       header = (<tr>
         <td></td>
         <td>*</td>
-        <td>Palo</td>
         <td>Speed</td>
         <td>SType</td>
+        <td><Button id="" data-index={0} onClick={this.handleAdd} variant="warning">
+          ins</Button></td>
       </tr>);
+    }
+    if (undefined !== this.state.compasArray && this.state.compasArray.length > 0) {
       listItems = this.state.compasArray.map((compas, index) =>
         <tr key={index}
           className={index === compasNo ? "rowSelected" : ""}>
           <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
             play</Button></td>
           <td>{compas.no}</td>
-          <td>{compas.Palo}</td>
           <td>{compas.Speed}</td>
           <td>{compas.SType}</td>
           <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">
@@ -147,6 +201,8 @@ class Editor extends Component {
         </tr >
       );
     };
+
+    defaultOption = PalosArray[0];
     // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
     return (
       <div>
@@ -159,7 +215,11 @@ class Editor extends Component {
         <div>Compas table ====
         </div>
         <div>
-          <Table bordered hover table-primary>
+          <Dropdown options={PalosArray} onChange={this._onSelect}
+            value={defaultOption} placeholder="Select the Palo" />
+        </div>
+        <div>
+          <Table bordered hover table-primary='true'>
             <thead>
               {header}
             </thead>
