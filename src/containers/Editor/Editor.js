@@ -3,7 +3,6 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { Button, Table } from 'react-bootstrap';
 import React, { Component } from 'react';
-import { serverapi } from './serverapi.js';
 import MetronomeModel from './MetronomeModel.js';
 import { VisSettings, MetronomeCore } from './MetronomeCore.js';
 
@@ -133,7 +132,7 @@ class Editor extends Component {
     console.log('onSelectPalo:  e.value', e.value);
     for (let idx = 0; idx < this.theModel.PalosArray.length; idx++) {
       console.log('onSelectPalo:  e.value', e.value);
-      if (this.theModel.PalosArray[idx] == e.value) {
+      if (this.theModel.PalosArray[idx] === e.value) {
         this.theModel.setPalo(idx);
       }
     }

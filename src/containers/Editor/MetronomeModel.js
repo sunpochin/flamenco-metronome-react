@@ -56,13 +56,13 @@ class MetronomeModel {
 
   setPalo(paloIdx) {
     this.palo = this.PalosArray[paloIdx];
-    if (paloIdx == 0) {
+    if (paloIdx === 0) {
       this.metroCore.curPattern = beatAlegriasTraditional;
     }
-    if (paloIdx == 1) {
+    if (paloIdx === 1) {
       this.metroCore.curPattern = beatSeguiriyas;
     }
-    if (paloIdx == 2) {
+    if (paloIdx === 2) {
       this.metroCore.curPattern = beatTangos;
     }
 

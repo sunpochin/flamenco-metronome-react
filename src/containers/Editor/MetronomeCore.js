@@ -77,7 +77,7 @@ export default class MetronomeCore {
             self.updateCompasIndicator();
 
 
-            if (0 == self.compasJson.length) {
+            if (0 === self.compasJson.length) {
                 alert('compas table empty!');
                 return;
             }
