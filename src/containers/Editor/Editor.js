@@ -8,33 +8,23 @@ import MetronomeModel from './MetronomeModel.js';
 import { VisSettings, MetronomeCore } from './MetronomeCore.js';
 
 import AudioFiles from './AudioFiles.js';
-let PalosArray = ['Alegrias', 'Soleares', 'Tangos', 'Bulerias'];
 
 class Editor extends Component {
   constructor(props) {
     super(props);
-    //        this.state = {...};
-    //        self = this;
-    let PalosArray = ['Alegrias', 'Soleares', 'Tangos', 'Bulerias'];
+    this.init();
+
     this.state = {
       compasArray: [],
-      palosArr: PalosArray,
+      palosArr: this.theModel.PalosArray,
       curPalo: 'default palo',
     };
+
     console.log('palosArr: ', this.state.palosArr, ', curPalo: ', this.state.curPalo);
     this.state = { isToggleOn: true };
-    //    this.setState({ isToggleOn: true });
-
-    // this.setState({
-    //   compasArray: [],
-    //   palosArr: PalosArray,
-    //   curPalo: '',
-    // });
-    this.init();
   }
 
   init() {
-
     this.soundsPath = './res/audio/';
     let sounds = ['Low_Bongo.wav', 'Clap_bright.wav',];
     const metroSoundListener = {
@@ -42,6 +32,12 @@ class Editor extends Component {
       setStartTime: (t) => VisSettings.startTime = t
     };
     this.metroCore = new MetronomeCore(metroSoundListener);
+    this.theModel = new MetronomeModel();
+    this.theModel.setCore(this.metroCore);
+    this.theModel.setPalo(0);
+
+    console.log('theModel:', this.theModel, 'metroCore: ', this.metroCore);
+
 
     console.log('this.props.isUnitTest:', this.props.isUnitTest);
     if (true === this.props.isUnitTest) {
@@ -52,10 +48,6 @@ class Editor extends Component {
       let soundFiles = new AudioFiles(audioContext, urls);
       this.metroCore.setAudioContext(audioContext, soundFiles);
     }
-
-    this.theModel = new MetronomeModel();
-    this.theModel.setCore(this.metroCore);
-
     this.loadCompas();
 
     // for 'this' could be used in callback, we have to bind it here.
@@ -65,7 +57,7 @@ class Editor extends Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleDel = this.handleDel.bind(this);
     this.handlePlayHere = this.handlePlayHere.bind(this);
-
+    this.onSelectPalo = this.onSelectPalo.bind(this);
     this.RenderView = this.RenderView.bind(this);
     this.metroCore.setNotifyChange(this.RenderView);
 
@@ -75,11 +67,6 @@ class Editor extends Component {
     console.log('Editor.js, render view, this: ', this);
     this.setState(this.state);
   }
-
-  // createTable(datas) {
-  //   for (let element of datas) {
-  //   }
-  // }
 
   async loadCompas() {
     await this.theModel.loadJson().then(datas => {
@@ -94,11 +81,6 @@ class Editor extends Component {
 
   saveCompas() {
     this.theModel.saveJson();
-  }
-
-  selectPalo() {
-    console.log('selectPalo: ');
-
   }
 
   handleDropdownSelected = function (e) {
@@ -145,23 +127,16 @@ class Editor extends Component {
   }
 
   componentDidMount() {
-    //    this.init();
-    // serverapi.get('compas.json')
-    //   .then(response => {
-    //     console.log('response: ', response);
-    //     this.setState(state => ({
-    //       compasArray: this.theModel.getDatas()
-    //     }));
-
-    //   })
-    //   .catch(error => {
-    //     this.setState({ error: true });
-    //   });
   }
 
-  _onSelect = function (e) {
-    console.log('_onSelect: ', e);
-    // const idx = e.target.getAttribute("data-index");
+  onSelectPalo = function (e) {
+    console.log('onSelectPalo:  e.value', e.value);
+    for (let idx = 0; idx < this.theModel.PalosArray.length; idx++) {
+      console.log('onSelectPalo:  e.value', e.value);
+      if (this.theModel.PalosArray[idx] == e.value) {
+        this.theModel.setPalo(idx);
+      }
+    }
   }
 
   render() {
@@ -170,42 +145,30 @@ class Editor extends Component {
 
     let listItems = [];
     let header = [];
-    // <td>{index === compasNo ? "==>" : ""}</td>
-    //         <td>Palo</td>
-    // <td>{compas.Palo}</td>
-
-    //    if (undefined !== this.state.compasArray) 
-    {
-      header = (<tr>
-        <td></td>
-        <td>*</td>
-        <td>Speed</td>
-        <td>SType</td>
-        <td><Button id="" data-index={0} onClick={this.handleAdd} variant="warning">
+    header = (<tr>
+      <td></td>
+      <td>*</td>
+      <td>Speed</td>
+      <td>SType</td>
+      <td><Button id="" data-index={0} onClick={this.handleAdd} variant="warning">
+        ins</Button></td>
+      <td></td>
+    </tr>);
+    listItems = this.theModel.getDatas().map((compas, index) =>
+      <tr key={index}
+        className={index === compasNo ? "rowSelected" : ""}>
+        <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
+          play</Button></td>
+        <td>{compas.no}</td>
+        <td>{compas.Speed}</td>
+        <td>{compas.SType}</td>
+        <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">
           ins</Button></td>
-        <td></td>
-      </tr>);
-    }
-    //if (undefined !== this.state.compasArray && this.state.compasArray.length > 0) 
-    {
-      listItems = this.theModel.getDatas().map((compas, index) =>
-        <tr key={index}
-          className={index === compasNo ? "rowSelected" : ""}>
-          <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
-            play</Button></td>
-          <td>{compas.no}</td>
-          <td>{compas.Speed}</td>
-          <td>{compas.SType}</td>
-          <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">
-            ins</Button></td>
-          <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">
-            del</Button></td>
-        </tr >
-      );
-    };
-
-    let defaultOption = PalosArray[0];
-    // self.metroWorker = new MetronomeCore(soundsPath, sounds, metroSoundListener);
+        <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">
+          del</Button></td>
+      </tr >
+    );
+    let defaultOption = this.theModel.PalosArray[this.theModel.palo];
     return (
       <div>
         <h1>Flamenco Metronome Editor</h1>
@@ -217,8 +180,8 @@ class Editor extends Component {
         <div>Compas table ====
         </div>
         <div>
-          <Dropdown options={PalosArray} onChange={this._onSelect}
-            value={defaultOption} placeholder="Select the Palo" />
+          <Dropdown options={this.theModel.PalosArray}
+            onChange={this.onSelectPalo} value={defaultOption} placeholder="Select the Palo" />
         </div>
         <div>
           <Table bordered hover table-primary='true'>

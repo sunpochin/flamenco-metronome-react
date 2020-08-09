@@ -1,5 +1,17 @@
 import { postCompas, getCompas } from './serverapi.js';
 
+let PalosArray = ['Alegrias', 'Seguiriyas', 'Tangos', 'Bulerias'];
+
+let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
+  1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0];
+// let beatAlegriasTraditional = [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+//         1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+
+let beatTangos = [1.0, 0.5, 0.5, 1.0, 1.0];
+
+let beatSeguiriyas = [1.0, 0.5, 0.5, 1.0, 1.0];
+
+
 let self = null;
 // store the non-UI, re-usable parts: compas-list, logic.
 class MetronomeModel {
@@ -30,6 +42,9 @@ class MetronomeModel {
         _datas[iter]['no'] = (iter + 1).toString();
       }
     }
+
+    this.PalosArray = PalosArray;
+    this.palo = PalosArray[0];
   }
 
   // reorderData(datas) {
@@ -38,6 +53,21 @@ class MetronomeModel {
 
   //   return newDatas;
   // }
+
+  setPalo(paloIdx) {
+    this.palo = this.PalosArray[paloIdx];
+    if (paloIdx == 0) {
+      this.metroCore.curPattern = beatAlegriasTraditional;
+    }
+    if (paloIdx == 1) {
+      this.metroCore.curPattern = beatSeguiriyas;
+    }
+    if (paloIdx == 2) {
+      this.metroCore.curPattern = beatTangos;
+    }
+
+    console.log('this.metroCore.curPattern: ', this.metroCore.curPattern);
+  }
 
   loadJson() {
     return getCompas()

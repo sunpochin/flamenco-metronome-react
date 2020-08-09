@@ -1,13 +1,5 @@
-
 let endtime = new Date().getTime();
-// let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
-//     1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0 ];
-let beatAlegriasTraditional = [1.5, 0.5, 1, 1.5, 0.5, 1,
-    1.0, 0.5, 0.5, 1.0, 0.5, 0.5, 1.0, 1.0];
-// let beatAlegriasTraditional = [0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-//         1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
 
-let beatTangos = [0, 1.0, 0.5, 0.5, 1.0, 1.0];
 
 let self = null;
 
@@ -28,6 +20,7 @@ export default class MetronomeCore {
         this.tempoBpm = 140;
         this.soundNum = 1;
         this.compasNo = 0;
+        this.curPattern = [];
     }
 
     /**
@@ -76,7 +69,8 @@ export default class MetronomeCore {
         self.updateCompasIndicator();
 
         // An array to represent the beating pattern of different palos.
-        var beatPattern = beatAlegriasTraditional;
+        var beatPattern = this.curPattern;
+        console.log('this.curPattern: ', this.curPattern)
         let nextStart = self.audioContext.currentTime;
         function schedule() {
             // update the indicator when start beating.
