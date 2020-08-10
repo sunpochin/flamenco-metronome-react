@@ -22,10 +22,10 @@ class MetronomeModel {
     let _datas = [];
     self.setDatas = function (datas) {
       _datas = datas;
+      console.log('in setData, _datas: ', _datas, ', length: ', _datas.length);
       for (let iter = 0; iter < _datas.length; iter++) {
         // _datas[iter]['no'] = (iter + 1).toString();
       }
-      console.log('in setData: ', _datas);
     }
     self.getDatas = function () { return _datas; }
     self.getDataByIdx = function (idx) { return _datas[idx]; }
@@ -84,7 +84,30 @@ class MetronomeModel {
     console.log('this.metroCore.curPattern: ', this.metroCore.curPattern);
   }
 
+  async localJson() {
+    const getJson = async () => {
+      return fetch("compas-table.json")
+        .then(response => response.json())
+        .then(response => {
+          let json = response;
+          console.log('localJson: ', json);
+
+          self.setDatas(json);
+          self.metroCore.setCompasTable(json);
+          //                self.tableCreate();
+          console.log('json: ', json)
+          // console.log('this.datas: ', this.datas)
+
+          // self.addHeader();
+          // self.CreateRow(self.getDatas() );
+        });
+    }
+    await getJson();
+    //this.SetupSelection();
+  }
+
   loadJson() {
+    return self.localJson();
     return getCompas()
       .then(response => response)
       .then(response => {

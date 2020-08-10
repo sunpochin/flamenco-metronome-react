@@ -69,7 +69,8 @@ class Editor extends Component {
 
   async loadCompas() {
     await this.theModel.loadJson().then(datas => {
-      this.theModel.setDatas(datas);
+      console.log('loadCompas: ',)
+      //      this.theModel.setDatas(datas);
       this.setState(state => ({
         compasArray: this.theModel.getDatas()
       }));
