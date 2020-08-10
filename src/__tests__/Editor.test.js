@@ -2,10 +2,10 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import Editor from '../src/containers/Editor/Editor';
-import AudioFiles from '../src/containers/Editor/AudioFiles';
-import MetronomeModel from '../src/containers/Editor/MetronomeModel.js';
-import MetronomeCore from '../src/containers/Editor/MetronomeCore.js';
+import Editor from '../containers/Editor/Editor';
+import AudioFiles from '../containers/Editor/AudioFiles';
+import MetronomeModel from '../containers/Editor/MetronomeModel.js';
+import MetronomeCore from '../containers/Editor/MetronomeCore.js';
 
 // https://stackoverflow.com/questions/42535270/regeneratorruntime-is-not-defined-when-running-jest-test
 import 'regenerator-runtime/runtime';

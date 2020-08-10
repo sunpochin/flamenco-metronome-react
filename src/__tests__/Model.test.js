@@ -1,4 +1,4 @@
-import MetronomeModel from '../src/containers/Editor/MetronomeModel.js';
+import MetronomeModel from '../containers/Editor/MetronomeModel.js';
 
 // https://stackoverflow.com/questions/42535270/regeneratorruntime-is-not-defined-when-running-jest-test
 import 'regenerator-runtime/runtime';

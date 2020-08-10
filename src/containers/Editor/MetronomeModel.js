@@ -23,7 +23,7 @@ class MetronomeModel {
     self.setDatas = function (datas) {
       _datas = datas;
       for (let iter = 0; iter < _datas.length; iter++) {
-        _datas[iter]['no'] = (iter + 1).toString();
+        // _datas[iter]['no'] = (iter + 1).toString();
       }
       console.log('in setData: ', _datas);
     }
@@ -32,14 +32,14 @@ class MetronomeModel {
     self.insertDatas = function (idx, aCompas) {
       _datas.splice(idx, 0, aCompas);
       for (let iter = 0; iter < _datas.length; iter++) {
-        _datas[iter]['no'] = (iter + 1).toString();
+        // _datas[iter]['no'] = (iter + 1).toString();
       }
       console.log('in setData: ', _datas);
     }
     self.deleteDatas = function (idx) {
       _datas.splice(idx, 1);
       for (let iter = 0; iter < _datas.length; iter++) {
-        _datas[iter]['no'] = (iter + 1).toString();
+        // _datas[iter]['no'] = (iter + 1).toString();
       }
     }
 
