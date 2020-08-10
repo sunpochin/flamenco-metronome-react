@@ -154,21 +154,32 @@ class Editor extends Component {
         ins</Button></td>
       <td></td>
     </tr>);
-    listItems = this.theModel.getDatas().map((compas, index) =>
-      <tr key={index}
-        className={index === compasNo ? "rowSelected" : ""}>
-        <td><Button id="" data-index={index + 1}
-          onClick={this.handlePlayHere} variant="warning">
-          play</Button></td>
-        <td>{compas.no}</td>
-        <td>{compas.Speed}</td>
-        <td>{compas.SType}</td>
-        <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">
-          ins</Button></td>
-        <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">
-          del</Button></td>
-      </tr >
-    );
+
+    let sType = ['constant', 'as palo'];
+    let sSpeed = ['100', '105', '110', '115'];
+    if (this.theModel.getDatas().length > 0) {
+      listItems = this.theModel.getDatas().map((compas, index) =>
+        <tr key={index}
+          className={index === compasNo ? "rowSelected" : ""}>
+          <td><Button id="" data-index={index + 1}
+            onClick={this.handlePlayHere} variant="warning">
+            play</Button></td>
+          <td>{compas === undefined ? "xxx" : compas.no} </td>
+
+          <td><Dropdown options={sSpeed}
+            onChange={this.onSelectCompasSpeed} value={sSpeed[0]}
+            placeholder="105" /></td>
+          <td><Dropdown options={sType}
+            onChange={this.onSelectSType} value={sType[0]}
+            placeholder="Select beat type" /></td>
+          <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">
+            ins</Button></td>
+          <td><Button id="" data-index={index + 1} onClick={this.handleDel} variant="warning">
+            del</Button></td>
+        </tr >
+      );
+    }
+
     let defaultOption = this.theModel.PalosArray[this.theModel.paloidx];
     return (
       <div>
