@@ -109,21 +109,22 @@ class Editor extends Component {
   // play here.
   handlePlayHere = function (e) {
     const idx = e.target.getAttribute("data-index");
-    this.theModel.metroCore.compasNo = idx;
+    // console.log('play here idx: ', idx);
+
+    // this.theModel.metroCore.compasNo = idx;
     this.setState(this.state);
+    this.theModel.handlePlayHere(idx);
+    // this.metroCore.startPlaying();
   };
 
   handlePlayPause() {
+    this.theModel.startStop();
+    let newPlayState = this.metroCore.running;
     this.setState(state => ({
-      isToggleOn: !state.isToggleOn
+      isToggleOn: newPlayState
     }));
-    this.metroCore.startStop();
   }
-  state = {
-    ingredients: null,
-    totalPrice: 4,
-    purchasable: false,
-  }
+
 
   componentDidMount() {
   }
@@ -156,7 +157,8 @@ class Editor extends Component {
     listItems = this.theModel.getDatas().map((compas, index) =>
       <tr key={index}
         className={index === compasNo ? "rowSelected" : ""}>
-        <td><Button id="" data-index={index + 1} onClick={this.handlePlayHere} variant="warning">
+        <td><Button id="" data-index={index + 1}
+          onClick={this.handlePlayHere} variant="warning">
           play</Button></td>
         <td>{compas.no}</td>
         <td>{compas.Speed}</td>
@@ -167,7 +169,7 @@ class Editor extends Component {
           del</Button></td>
       </tr >
     );
-    let defaultOption = this.theModel.PalosArray[this.theModel.palo];
+    let defaultOption = this.theModel.PalosArray[this.theModel.paloidx];
     return (
       <div>
         <h1>Flamenco Metronome Editor</h1>
@@ -176,13 +178,15 @@ class Editor extends Component {
         <Button variant="warning" onClick={this.handlePlayPause}>
           {this.state.isToggleOn ? 'Play' : 'Stop'}
         </Button>
-        <div>Compas table ====
-        </div>
         <div>
+          <br />
+          ==== Select the Palo ====
           <Dropdown options={this.theModel.PalosArray}
             onChange={this.onSelectPalo} value={defaultOption} placeholder="Select the Palo" />
         </div>
         <div>
+          <br />
+          ==== Compas table ====
           <Table bordered hover table-primary='true'>
             <thead>
               {header}

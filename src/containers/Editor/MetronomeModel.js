@@ -44,7 +44,8 @@ class MetronomeModel {
     }
 
     this.PalosArray = PalosArray;
-    this.palo = PalosArray[0];
+    this.paloidx = 0;
+
   }
 
   // reorderData(datas) {
@@ -54,8 +55,23 @@ class MetronomeModel {
   //   return newDatas;
   // }
 
+  startStop() {
+    if (false === this.metroCore.playing) {
+      this.metroCore.startPlaying();
+    } else {
+      this.metroCore.pausePlaying();
+    }
+  }
+
+  handlePlayHere(idx) {
+    console.log('play here idx: ', idx);
+
+    this.metroCore.compasNo = parseInt(idx, 10);
+    this.metroCore.startPlaying();
+  };
+
   setPalo(paloIdx) {
-    this.palo = this.PalosArray[paloIdx];
+    this.paloidx = paloIdx;
     if (paloIdx === 0) {
       this.metroCore.curPattern = beatAlegriasTraditional;
     }

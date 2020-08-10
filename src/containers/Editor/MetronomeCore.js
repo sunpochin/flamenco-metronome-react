@@ -16,11 +16,11 @@ export default class MetronomeCore {
         self = this;
         const dummyListener = { setTempo: (t) => { }, setStartTime: (t) => { } };
         this.listener = listener || dummyListener;
-        this.running = false;
         this.tempoBpm = 140;
         this.soundNum = 1;
         this.compasNo = 0;
         this.curPattern = [];
+        this.playing = false;
     }
 
     /**
@@ -89,7 +89,7 @@ export default class MetronomeCore {
                 self.tempoBpm = speed;
             }
             // console.log('self.compasNo', self.compasNo, ' ,speed: ', speed, ' ,self.tempoBpm: ', self.tempoBpm);
-            if (!self.running) {
+            if (!self.playing) {
                 return;
             }
 
@@ -138,20 +138,50 @@ export default class MetronomeCore {
         schedule();
     }
 
-    startStop() {
-        //        const ms = this;
-
-        if (this.running = !this.running) {
+    startPlaying() {
+        if (false === this.playing) {
+            this.playing = true;
             this.playMetronome();
-        } else {
-            this.listener.setTempo(0);
-            if (this.source) {
-                this.source.disconnect();
-                this.source = undefined;
-            }
-            self.compasNo = 0;
         }
     }
+
+    pausePlaying() {
+        this.listener.setTempo(0);
+        if (this.source) {
+            this.source.disconnect();
+            this.source = undefined;
+        }
+        self.compasNo = 0;
+        this.playing = false;
+    }
+
+    // startPlaying() {
+    //     if (false === this.playing) {
+    //         this.playing = true;
+    //         this.playMetronome();
+    //     } else {
+    //         this.listener.setTempo(0);
+    //         if (this.source) {
+    //             this.source.disconnect();
+    //             this.source = undefined;
+    //         }
+    //         self.compasNo = 0;
+    //         this.playing = false;
+    //     }
+
+    //     // //        const ms = this;
+
+    //     // if (this.playing = !this.playing) {
+    //     //     this.playMetronome();
+    //     // } else {
+    //     //     this.listener.setTempo(0);
+    //     //     if (this.source) {
+    //     //         this.source.disconnect();
+    //     //         this.source = undefined;
+    //     //     }
+    //     //     self.compasNo = 0;
+    //     // }
+    // }
 }
 
 
