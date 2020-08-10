@@ -20,7 +20,7 @@ class Editor extends Component {
     };
 
     console.log('palosArr: ', this.state.palosArr, ', curPalo: ', this.state.curPalo);
-    this.state = { isToggleOn: true };
+    this.state = { isPlaying: false };
   }
 
   init() {
@@ -110,15 +110,18 @@ class Editor extends Component {
   handlePlayHere = function (e) {
     const idx = e.target.getAttribute("data-index");
     // console.log('play here idx: ', idx);
-    this.setState(this.state);
     this.theModel.handlePlayHere(idx);
+    let newPlayState = this.metroCore.playing;
+    this.setState(state => ({
+      isPlaying: newPlayState
+    }));
   };
 
   handlePlayPause() {
     this.theModel.startStop();
-    let newPlayState = this.metroCore.running;
+    let newPlayState = this.metroCore.playing;
     this.setState(state => ({
-      isToggleOn: newPlayState
+      isPlaying: newPlayState
     }));
   }
 
@@ -170,11 +173,12 @@ class Editor extends Component {
     return (
       <div>
         <h1>Flamenco Metronome Editor</h1>
+        <Button variant="warning" onClick={this.handlePlayPause}>
+          {this.state.isPlaying ? 'Pause' : 'Play'}
+        </Button>{" "}
+        <span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
         <Button variant="primary" onClick={this.loadCompas}>Load</Button>{' '}
         <Button variant="success" onClick={this.saveCompas}>Save</Button>{' '}
-        <Button variant="warning" onClick={this.handlePlayPause}>
-          {this.state.isToggleOn ? 'Play' : 'Stop'}
-        </Button>
         <div>
           <br />
           ==== Select Beat Pattern(Palo) ====
