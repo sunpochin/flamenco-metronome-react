@@ -110,11 +110,8 @@ class Editor extends Component {
   handlePlayHere = function (e) {
     const idx = e.target.getAttribute("data-index");
     // console.log('play here idx: ', idx);
-
-    // this.theModel.metroCore.compasNo = idx;
     this.setState(this.state);
     this.theModel.handlePlayHere(idx);
-    // this.metroCore.startPlaying();
   };
 
   handlePlayPause() {
@@ -147,9 +144,9 @@ class Editor extends Component {
     let header = [];
     header = (<tr>
       <td></td>
-      <td>*</td>
-      <td>Speed</td>
-      <td>SType</td>
+      <td>No.</td>
+      <td>Speed(BPM)</td>
+      <td>Beat Type</td>
       <td><Button id="" data-index={0} onClick={this.handleAdd} variant="warning">
         ins</Button></td>
       <td></td>
@@ -180,7 +177,7 @@ class Editor extends Component {
         </Button>
         <div>
           <br />
-          ==== Select the Palo ====
+          ==== Select Beat Pattern(Palo) ====
           <Dropdown options={this.theModel.PalosArray}
             onChange={this.onSelectPalo} value={defaultOption} placeholder="Select the Palo" />
         </div>

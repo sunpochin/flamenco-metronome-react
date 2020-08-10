@@ -1,6 +1,4 @@
 let endtime = new Date().getTime();
-
-
 let self = null;
 
 const VisSettings = {
@@ -64,6 +62,7 @@ export default class MetronomeCore {
     }
 
     playMetronome() {
+        console.log('playMetronome');
         const self = this;
         let beatCounter = 0;    //
         self.updateCompasIndicator();
@@ -73,9 +72,24 @@ export default class MetronomeCore {
         console.log('this.curPattern: ', this.curPattern)
         let nextStart = self.audioContext.currentTime;
         function schedule() {
+            beatCounter++;
+            // change compas
+            if (beatPattern.length === beatCounter) {
+                beatCounter = beatCounter % beatPattern.length;
+                self.compasNo += 1;
+                console.log('beatCounter: ', beatCounter, ', self.compasNo:', self.compasNo);
+            }
+            // check compasNo.
+            if (self.compasNo >= self.compasJson.length) {
+                self.compasNo = 0;
+                self.playing = false;
+                console.log('end of compas table. stop playing');
+                return;
+            }
+
+
             // update the indicator when start beating.
             self.updateCompasIndicator();
-
 
             if (0 === self.compasJson.length) {
                 alert('compas table empty!');
@@ -118,16 +132,9 @@ export default class MetronomeCore {
                 self.source.onended = schedule;
                 // start play a sound now
                 self.source.start(nextStart);
+
                 // then plan next sound time.
                 nextStart += (60 / self.tempoBpm) * beatPattern[beatCounter];
-
-                beatCounter++;
-                // change compas
-                if (beatPattern.length === beatCounter) {
-                    beatCounter = beatCounter % beatPattern.length;
-                    self.compasNo += 1;
-                    console.log('beatCounter: ', beatCounter, ', self.compasNo:', self.compasNo);
-                }
 
                 // debugging.
                 // let diff = new Date().getTime() - endtime;
@@ -139,6 +146,7 @@ export default class MetronomeCore {
     }
 
     startPlaying() {
+        console.log('startPlaying. this.playing: ', this.playing);
         if (false === this.playing) {
             this.playing = true;
             this.playMetronome();
@@ -154,34 +162,6 @@ export default class MetronomeCore {
         self.compasNo = 0;
         this.playing = false;
     }
-
-    // startPlaying() {
-    //     if (false === this.playing) {
-    //         this.playing = true;
-    //         this.playMetronome();
-    //     } else {
-    //         this.listener.setTempo(0);
-    //         if (this.source) {
-    //             this.source.disconnect();
-    //             this.source = undefined;
-    //         }
-    //         self.compasNo = 0;
-    //         this.playing = false;
-    //     }
-
-    //     // //        const ms = this;
-
-    //     // if (this.playing = !this.playing) {
-    //     //     this.playMetronome();
-    //     // } else {
-    //     //     this.listener.setTempo(0);
-    //     //     if (this.source) {
-    //     //         this.source.disconnect();
-    //     //         this.source = undefined;
-    //     //     }
-    //     //     self.compasNo = 0;
-    //     // }
-    // }
 }
 
 
@@ -194,7 +174,6 @@ export default class MetronomeCore {
 //     [29, 140], [30, 160], [31, 180], [32, 200],
 //     [33, 200],
 // ] );
-
 
 
 export { MetronomeCore, VisSettings };

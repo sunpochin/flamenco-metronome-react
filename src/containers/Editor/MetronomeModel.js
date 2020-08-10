@@ -65,8 +65,7 @@ class MetronomeModel {
 
   handlePlayHere(idx) {
     console.log('play here idx: ', idx);
-
-    this.metroCore.compasNo = parseInt(idx, 10);
+    this.metroCore.compasNo = parseInt(idx - 1, 10);
     this.metroCore.startPlaying();
   };
 
