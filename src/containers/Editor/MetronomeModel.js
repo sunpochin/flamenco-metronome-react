@@ -19,28 +19,28 @@ class MetronomeModel {
   constructor() {
     self = this;
     // mimicing private variables: https://stackoverflow.com/a/28165599/720276
-    let _datas = [];
+    this._datas = [];
     self.setDatas = function (datas) {
-      _datas = datas;
-      console.log('in setData, _datas: ', _datas, ', length: ', _datas.length);
-      for (let iter = 0; iter < _datas.length; iter++) {
-        // _datas[iter]['no'] = (iter + 1).toString();
-      }
+      this._datas = datas;
+      console.log('in setData, _datas: ', this._datas, ', length: ', this._datas.length);
+      // for (let iter = 0; iter < this._datas.length; iter++) {
+      //   // _datas[iter]['no'] = (iter + 1).toString();
+      // }
     }
-    self.getDatas = function () { return _datas; }
-    self.getDataByIdx = function (idx) { return _datas[idx]; }
+    self.getDatas = function () { return this._datas; }
+    self.getDataByIdx = function (idx) { return this._datas[idx]; }
     self.insertDatas = function (idx, aCompas) {
-      _datas.splice(idx, 0, aCompas);
-      for (let iter = 0; iter < _datas.length; iter++) {
-        // _datas[iter]['no'] = (iter + 1).toString();
-      }
-      console.log('in setData: ', _datas);
+      this._datas.splice(idx, 0, aCompas);
+      // for (let iter = 0; iter < this._datas.length; iter++) {
+      //   // _datas[iter]['no'] = (iter + 1).toString();
+      // }
+      // // console.log('in setData: ', _datas);
     }
     self.deleteDatas = function (idx) {
-      _datas.splice(idx, 1);
-      for (let iter = 0; iter < _datas.length; iter++) {
-        // _datas[iter]['no'] = (iter + 1).toString();
-      }
+      this._datas.splice(idx, 1);
+      // for (let iter = 0; iter < this._datas.length; iter++) {
+      //   // _datas[iter]['no'] = (iter + 1).toString();
+      // }
     }
 
     this.PalosArray = PalosArray;

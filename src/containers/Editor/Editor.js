@@ -7,10 +7,13 @@ import MetronomeModel from './MetronomeModel.js';
 import { VisSettings, MetronomeCore } from './MetronomeCore.js';
 
 import AudioFiles from './AudioFiles.js';
+let self;
 
 class Editor extends Component {
   constructor(props) {
     super(props);
+    self = this;
+
     this.init();
 
     this.state = {
@@ -140,6 +143,13 @@ class Editor extends Component {
     }
   }
 
+  onSelectCompasSpeed = function (e) {
+    console.log('this: ', this, ', self: ', self);
+    const idx = this.dataidx;
+    console.log('idx: ', idx);
+    self.theModel._datas[idx - 1]['speed'] = e.value;
+  }
+
   render() {
     const compasNo = this.theModel.metroCore.compasNo;
     console.log('render, compasNo: ', compasNo);
@@ -167,10 +177,10 @@ class Editor extends Component {
             play</Button></td>
           <td>{compas === undefined ? "xxx" : compas.no} </td>
 
-          <td><Dropdown options={sSpeed}
-            onChange={this.onSelectCompasSpeed} value={sSpeed[0]}
-            placeholder="105" /></td>
-          <td><Dropdown options={sType}
+          <td><Dropdown options={sSpeed} dataidx={index + 1}
+            onChange={this.onSelectCompasSpeed}
+            value={sSpeed[0]} placeholder="105" /></td>
+          <td><Dropdown options={sType} dataidx={index + 1}
             onChange={this.onSelectSType} value={sType[0]}
             placeholder="Select beat type" /></td>
           <td><Button id="" data-index={index + 1} onClick={this.handleAdd} variant="warning">
